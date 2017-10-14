@@ -57,3 +57,29 @@ class Board(object):
         """
         return self._revealed[x][y]
 
+    def reveal(self, x, y):
+        """
+        Reveal the box at the coordinates
+        Args:
+            x: box's x coordinate
+            y: box's y coordinate
+        """
+        self._revealed[x][y] = True
+
+    def cover(self, x, y):
+        """
+        Hide the box at the coordinates
+        Args:
+            x: box's x coordinate
+            y: box's y coordinate
+        """
+        self._revealed[x][y] = False
+
+    def toggle_reveal(self, x, y):
+        """
+        Toggle the reveal state of the box at the coordinates
+        Args:
+            x: box's x coordinate
+            y: box's y coordinate
+        """
+        self._revealed[x][y] = not self.is_revealed(x, y)

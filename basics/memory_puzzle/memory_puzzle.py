@@ -1,7 +1,7 @@
 import sys
 
 import pygame
-from pygame.locals import QUIT, KEYUP, K_ESCAPE
+from pygame.locals import QUIT, KEYUP, K_ESCAPE, MOUSEBUTTONUP
 
 import board
 import board_view
@@ -70,6 +70,15 @@ def main():
                     (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
+            if event.type == MOUSEBUTTONUP:
+                mouse_coords = misc.Coords(event.pos[0], event.pos[1], 'pixel')
+                box_coords = main_board_view.get_box_at_pixel(mouse_coords)
+                if box_coords:
+                    box_coords = misc.Coords(box_coords[0], box_coords[1], 'board')
+                    main_board.toggle_reveal(box_coords.x, box_coords.y)
+                    print('({}, {})'.format(box_coords.x, box_coords.y))
+                else:
+                    print(None)
         main_board_view.draw_board()
         pygame.display.update()
         FPS_CLOCK.tick(FPS)

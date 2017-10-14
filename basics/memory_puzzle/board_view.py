@@ -29,6 +29,22 @@ class BoardView(object):
                 self._draw_box_cover(x, y, self._box_size)
         # self._draw_all_icons()
 
+    def get_box_at_pixel(self, pixel_coordinates):
+        """
+        Args:
+            pixel_coordinates: the pixel's coordinates
+
+        Returns:
+            The board coordinates of the box at the pixel coordinates. Otherwise, None.
+        """
+        for x, y in self._board.boxes():
+            left_top_pixel_coords = self.left_top_box_coords(x, y)
+            box_rectangle = pygame.Rect(left_top_pixel_coords.x, left_top_pixel_coords.y,
+                                        self._box_size, self._box_size)
+            if box_rectangle.collidepoint(pixel_coordinates.x, pixel_coordinates.y):
+                return x, y
+        return None
+
     def _draw_box_cover(self, x, y, coverage):
         """
         Draw the box cover.
