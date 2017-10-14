@@ -1,3 +1,3 @@
 from collections import namedtuple
 
-Coords = namedtuple('Coords', ['x', 'y'])
+Coords = namedtuple('Coords', ['x', 'y', 'type'])

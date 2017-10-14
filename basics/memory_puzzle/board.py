@@ -9,6 +9,11 @@ class Board(object):
         self._shapes = shapes
         self._new_board()
 
+    def boxes(self):
+        for x in self._width:
+            for y in self._height:
+                yield (x, y)
+
     def _new_board(self):
         """Replaces the old board with a new configuration"""
         icons = []
@@ -51,7 +56,4 @@ class Board(object):
             True if the box is revealed, else False.
         """
         return self._revealed[x][y]
-
-
-
 

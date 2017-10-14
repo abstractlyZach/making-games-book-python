@@ -3,6 +3,7 @@ import sys
 import pygame
 from pygame.locals import QUIT, KEYUP, K_ESCAPE
 
+import board
 import misc
 
 FPS = 30
@@ -55,7 +56,11 @@ def main():
     FPS_CLOCK = pygame.time.Clock()
     DISPLAY_SURFACE = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('Memory Game')
-    mouse_coords = misc.Coords(0, 0)
+    mouse_coords = misc.Coords(0, 0, 'pixels')
+
+    main_board = board.Board()
+
+
 
     while True:
         DISPLAY_SURFACE.fill(BG_COLOR)
