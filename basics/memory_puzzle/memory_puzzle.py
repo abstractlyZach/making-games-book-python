@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import QUIT, KEYUP, K_ESCAPE
 
 import board
+import board_view
 import misc
 
 FPS = 30
@@ -58,9 +59,9 @@ def main():
     pygame.display.set_caption('Memory Game')
     mouse_coords = misc.Coords(0, 0, 'pixels')
 
-    main_board = board.Board()
-
-
+    main_board = board.Board(BOARD_WIDTH, BOARD_HEIGHT, ALL_COLORS, ALL_SHAPES)
+    main_board_view = board_view.BoardView(main_board, DISPLAY_SURFACE, BOX_SIZE, GAP_SIZE,
+                                           X_MARGIN, Y_MARGIN, BG_COLOR)
 
     while True:
         DISPLAY_SURFACE.fill(BG_COLOR)
@@ -69,7 +70,9 @@ def main():
                     (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
+        main_board_view.draw_board()
         pygame.display.update()
+        FPS_CLOCK.tick(FPS)
 
 
 if __name__ == '__main__':

@@ -10,8 +10,8 @@ class Board(object):
         self._new_board()
 
     def boxes(self):
-        for x in self._width:
-            for y in self._height:
+        for x in range(self._width):
+            for y in range(self._height):
                 yield (x, y)
 
     def _new_board(self):
@@ -19,7 +19,7 @@ class Board(object):
         icons = []
         for color in self._colors:
             for shape in self._shapes:
-                icons.append((color, shape))
+                icons.append((shape, color))
         random.shuffle(icons)
         # select icons for the board and duplicate them
         num_icons_possible = math.floor((self._width * self._height) / 2)
