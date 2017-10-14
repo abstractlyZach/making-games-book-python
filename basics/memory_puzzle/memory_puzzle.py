@@ -64,7 +64,6 @@ def main():
                                            X_MARGIN, Y_MARGIN, BG_COLOR)
 
     while True:
-        DISPLAY_SURFACE.fill(BG_COLOR)
         for event in pygame.event.get():
             if event.type == QUIT or \
                     (event.type == KEYUP and event.key == K_ESCAPE):
