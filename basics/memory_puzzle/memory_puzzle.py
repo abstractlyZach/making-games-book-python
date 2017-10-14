@@ -62,7 +62,7 @@ def main():
 
     main_board = board.Board(BOARD_WIDTH, BOARD_HEIGHT, ALL_COLORS, ALL_SHAPES)
     main_board_view = board_view.BoardView(main_board, DISPLAY_SURFACE, BOX_SIZE, GAP_SIZE,
-                                           X_MARGIN, Y_MARGIN, BG_COLOR)
+                                           X_MARGIN, Y_MARGIN, BG_COLOR, BOX_COLOR)
 
     while True:
         for event in pygame.event.get():

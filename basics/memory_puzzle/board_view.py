@@ -7,7 +7,8 @@ import misc
 
 class BoardView(object):
     """Class for handling graphical aspects of a board"""
-    def __init__(self, board, display_surface, box_size, gap_size, x_margin, y_margin, background_color):
+    def __init__(self, board, display_surface, box_size, gap_size,
+                 x_margin, y_margin, background_color, box_cover_color):
         self._board = board
         self._box_size = box_size
         self._gap_size = gap_size
@@ -15,12 +16,32 @@ class BoardView(object):
         self._x_margin = x_margin
         self._y_margin = y_margin
         self._background_color = background_color
+        self._box_cover_color = box_cover_color
         self._quarter = math.floor(self._box_size / 4)
         self._half = math.floor(self._box_size / 2)
 
     def draw_board(self):
         self._display_surface.fill(self._background_color)
-        self._draw_all_icons()
+        for x, y in self._board.boxes():
+            if self._board.is_revealed(x, y):
+                self._draw_icon(x, y)
+            else:
+                self._draw_box_cover(x, y, self._box_size)
+        # self._draw_all_icons()
+
+    def _draw_box_cover(self, x, y, coverage):
+        """
+        Draw the box cover.
+        Args:
+            x: box's x coordinate
+            y: box's y coordinate
+            coverage: how many pixels of width should be covering the box
+        """
+        assert coverage <= self._box_size
+        left_x, top_y, _  = self.left_top_box_coords(x, y)
+        if coverage > 0:
+            pygame.draw.rect(self._display_surface, self._box_cover_color,
+                             (left_x, top_y, coverage, self._box_size))
 
     def _draw_all_icons(self):
         """Draws all the icons on the board"""
