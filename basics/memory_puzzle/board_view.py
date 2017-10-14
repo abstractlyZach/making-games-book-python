@@ -36,6 +36,8 @@ class BoardView(object):
         """
         left, top, _ = self.left_top_box_coords(x, y)
         shape, color = self._board.get_shape_and_color(x, y)
+        # todo: change these to variables instead of strings so that it throws errors on typos instead of allowing for
+        #       weird bugs later
         if shape == 'donut':
             self._draw_donut(color, left, top)
         elif shape == 'square':
@@ -94,6 +96,6 @@ class BoardView(object):
     def _draw_oval(self, color, left_x, top_y):
         """Draw a colored oval at the pixel coordinates"""
         pygame.draw.ellipse(self._display_surface, color,
-                            (left_x + self._quarter, top_y, self._half, self._box_size)
+                            (left_x, top_y + self._quarter, self._box_size, self._half)
         )
 

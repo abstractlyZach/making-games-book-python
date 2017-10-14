@@ -7,6 +7,7 @@ import board
 import board_view
 import misc
 
+# todo: move all these things to a config file
 FPS = 30
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
