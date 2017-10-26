@@ -5,6 +5,40 @@ import pygame
 import board
 import misc
 
+class AnimationStatus(object):
+    def __init__(self):
+        self._coverage = 0
+        self._animation_rate = 0
+        self._being_animated = False
+
+    @property
+    def coverage(self):
+        return self._coverage
+
+    @coverage.setter
+    def coverage(self, new_coverage):
+        self._coverage = new_coverage
+
+    @property
+    def animation_rate(self):
+        return self._animation_rate
+
+    @property
+    def being_animated(self):
+        return self._being_animated
+
+    def start_animation(self, animation_rate):
+        self._animation_rate = animation_rate
+        self._being_animated = True
+
+    def end_animation(self):
+        self._being_animated = False
+        self._animation_rate = 0
+
+    def tick_animation(self):
+        self._coverage += self._animation_rate
+
+
 class BoardView(object):
     """Class for handling graphical aspects of a board"""
     def __init__(self, board, display_surface, box_size, gap_size,
@@ -19,15 +53,53 @@ class BoardView(object):
         self._box_cover_color = box_cover_color
         self._quarter = math.floor(self._box_size / 4)
         self._half = math.floor(self._box_size / 2)
+        self._animation_statuses = [[AnimationStatus() for y in range(self._board.height)] for x in range(self._board.width)]
 
     def draw_board(self):
         self._display_surface.fill(self._background_color)
+        self._progress_all_animations()
         for x, y in self._board.boxes():
-            if self._board.is_revealed(x, y):
-                self._draw_icon(x, y)
-            else:
-                self._draw_box_cover(x, y, self._box_size)
-        # self._draw_all_icons()
+            self._draw_box(x, y)
+
+    def _draw_box(self, x, y):
+        if self._is_being_animated(x, y):
+            current_coverage = self._get_current_coverage(x, y)
+            self._draw_icon(x, y)
+            self._draw_box_cover(x, y, current_coverage)
+        elif self._board.is_revealed(x, y):
+            self._draw_icon(x, y)
+        else:
+            self._draw_box_cover(x, y, self._box_size)
+
+    def _get_current_coverage(self, x, y):
+        current_coverage = self._animation_statuses[x][y].coverage
+        if current_coverage > 0:
+            current_coverage = min(current_coverage, self._box_size)
+        else:
+            current_coverage = max(current_coverage, 0)
+        return current_coverage
+
+    def _progress_all_animations(self):
+        for x, rows in enumerate(self._animation_statuses):
+            for y, _ in enumerate(rows):
+                animation_status = self._animation_statuses[x][y]
+                self._progress_animation(animation_status)
+
+    def _progress_animation(self, animation_status):
+        if animation_status.being_animated:
+            animation_status.tick_animation()
+            coverage = animation_status.coverage
+            if coverage <= 0 or coverage >= self._box_size:
+                animation_status.end_animation()
+
+    def _is_being_animated(self, x, y):
+        return self._animation_statuses[x][y].being_animated
+
+    def animate_box_open(self, x, y):
+        self._animation_statuses[x][y].start_animation(5)
+
+    def animate_box_close(self, x, y):
+        self._animation_statuses[x][y].start_animation(-5)
 
     def get_box_at_pixel(self, pixel_coordinates):
         """

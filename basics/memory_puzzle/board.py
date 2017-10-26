@@ -83,3 +83,11 @@ class Board(object):
             y: box's y coordinate
         """
         self._revealed[x][y] = not self.is_revealed(x, y)
+
+    @property
+    def width(self):
+        return self._width
+
+    @property
+    def height(self):
+        return self._height
