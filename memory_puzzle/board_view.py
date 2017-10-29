@@ -1,9 +1,12 @@
 import math
+import random
 
 import pygame
 
 import board
 import misc
+
+BOXES_TO_REVEAL_IN_HINT = 6
 
 class AnimationStatus(object):
     def __init__(self, starting_coverage=0):
@@ -101,6 +104,12 @@ class BoardView(object):
             if coverage <= 0 or coverage >= self._box_size:
                 animation_status.end_animation()
 
+    def are_animations_active(self):
+        for box_x, box_y in self._board.boxes():
+            if self._is_being_animated(box_x, box_y):
+                return True
+        return False
+
     def _is_being_animated(self, x, y):
         return self._animation_statuses[x][y].being_animated
 
@@ -115,6 +124,24 @@ class BoardView(object):
 
     def animate_box_close(self, x, y):
         self._animation_statuses[x][y].start_animation(5)
+
+    def get_hint_groups(self):
+        unrevealed_box_coords = self._get_unrevealed_boxes()
+        random.shuffle(unrevealed_box_coords)
+        for i in range(0, len(unrevealed_box_coords), BOXES_TO_REVEAL_IN_HINT):
+            boxes_to_peek = unrevealed_box_coords[i:i+BOXES_TO_REVEAL_IN_HINT]
+            yield boxes_to_peek
+
+    def _get_unrevealed_boxes(self):
+        unrevealed_boxes = []
+        for box_x, box_y in self._board.boxes():
+            if not self._board.is_revealed(box_x, box_y):
+                unrevealed_boxes.append((box_x, box_y))
+        return unrevealed_boxes
+
+    def peek_group_of_boxes(self, boxes):
+        for box_x, box_y in boxes:
+            self.animate_box_open_then_close(box_x, box_y)
 
     def get_box_at_pixel(self, pixel_coordinates):
         """

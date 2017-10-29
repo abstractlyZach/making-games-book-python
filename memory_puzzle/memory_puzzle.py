@@ -49,6 +49,14 @@ ALL_SHAPES = (DONUT, SQUARE, DIAMOND, LINES, OVAL)
 assert(len(ALL_COLORS) * len(ALL_SHAPES) * 2 >= BOARD_WIDTH * BOARD_HEIGHT,
        "Board is too big for the number of shapes/colors defined.")
 
+def hint_animation(board_view, clock):
+    for box_group in board_view.get_hint_groups():
+        board_view.peek_group_of_boxes(box_group)
+        while board_view.are_animations_active():
+            board_view.draw_board()
+            pygame.display.update()
+            clock.tick(FPS)
+
 
 def main():
     """Sets up the game and runs the main loop"""
@@ -63,6 +71,8 @@ def main():
     main_board = board.Board(BOARD_WIDTH, BOARD_HEIGHT, ALL_COLORS, ALL_SHAPES)
     main_board_view = board_view.BoardView(main_board, DISPLAY_SURFACE, BOX_SIZE, GAP_SIZE,
                                            X_MARGIN, Y_MARGIN, BG_COLOR, BOX_COLOR)
+
+    hint_animation(main_board_view, FPS_CLOCK)
 
     while True:
         for event in pygame.event.get():
