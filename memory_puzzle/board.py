@@ -84,6 +84,12 @@ class Board(object):
         """
         self._revealed[x][y] = not self.is_revealed(x, y)
 
+    def are_all_revealed(self):
+        for x, y in self.boxes():
+            if not self.is_revealed(x, y):
+                return False
+        return True
+
     @property
     def width(self):
         return self._width

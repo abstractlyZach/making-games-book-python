@@ -1,5 +1,6 @@
 import math
 import random
+import time
 
 import pygame
 
@@ -7,6 +8,7 @@ import board
 import misc
 
 BOXES_TO_REVEAL_IN_HINT = 6
+NO_MATCH_DELAY = 1
 
 class AnimationStatus(object):
     def __init__(self, starting_coverage=0):
@@ -66,6 +68,7 @@ class BoardView(object):
         self._animation_statuses = [[AnimationStatus(starting_coverage=box_size)
                                      for y in range(self._board.height)]
                                     for x in range(self._board.width)]
+        self._first_selection = None
 
     def draw_board(self):
         self._display_surface.fill(self._background_color)
@@ -249,4 +252,44 @@ class BoardView(object):
         pygame.draw.ellipse(self._display_surface, color,
                             (left_x, top_y + self._quarter, self._box_size, self._half)
         )
+
+    def select(self, x, y):
+        if self._board.is_revealed(x, y):
+            return
+        else:
+            if self._first_selection is None:
+                self._first_select(x, y)
+            else:
+                self._second_select(x, y)
+
+    def _first_select(self, x, y):
+        self._first_selection = (x, y)
+        self._animate_selection(x, y)
+
+    def _second_select(self, second_select_x, second_select_y):
+        self._animate_selection(second_select_x, second_select_y)
+        first_select_x, first_select_y = self._first_selection
+        self._first_selection = None
+        first_icon = self._board.get_shape_and_color(first_select_x, first_select_y)
+        second_icon = self._board.get_shape_and_color(second_select_x, second_select_y)
+        if first_icon == second_icon:
+            return
+        else:
+            self._handle_no_match([(first_select_x, first_select_y), (second_select_x, second_select_y)])
+
+    def _animate_selection(self, x, y):
+        self.animate_box_open(x, y)
+        self._board.reveal(x, y)
+        while self.are_animations_active():
+            time.sleep(.2)
+        self._animation_statuses[x][y].coverage = 0
+
+    def _handle_no_match(self, coords_to_unselect):
+        for x, y in coords_to_unselect:
+            self.animate_box_close(x, y)
+            self._board.cover(x, y)
+        while self.are_animations_active():
+            time.sleep(.2)
+        for x, y in coords_to_unselect:
+            self._animation_statuses[x][y].coverage = self._box_size
 

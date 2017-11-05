@@ -52,11 +52,13 @@ assert(len(ALL_COLORS) * len(ALL_SHAPES) * 2 >= BOARD_WIDTH * BOARD_HEIGHT,
 def hint_animation(board_view, clock):
     for box_group in board_view.get_hint_groups():
         board_view.peek_group_of_boxes(box_group)
-        while board_view.are_animations_active():
-            board_view.draw_board()
-            pygame.display.update()
-            clock.tick(FPS)
+        wait_for_animations(board_view, clock)
 
+def wait_for_animations(board_view, clock):
+    while board_view.are_animations_active():
+        board_view.draw_board()
+        pygame.display.update()
+        clock.tick(FPS)
 
 def main():
     """Sets up the game and runs the main loop"""
@@ -72,7 +74,7 @@ def main():
     main_board_view = board_view.BoardView(main_board, DISPLAY_SURFACE, BOX_SIZE, GAP_SIZE,
                                            X_MARGIN, Y_MARGIN, BG_COLOR, BOX_COLOR)
 
-    hint_animation(main_board_view, FPS_CLOCK)
+    # hint_animation(main_board_view, FPS_CLOCK)
 
     while True:
         for event in pygame.event.get():
@@ -86,7 +88,9 @@ def main():
                 if box_coords:
                     box_coords = misc.Coords(box_coords[0], box_coords[1], 'board')
                     # main_board.toggle_reveal(box_coords.x, box_coords.y)
-                    main_board_view.animate_box_open_then_close(box_coords.x, box_coords.y)
+                    # main_board_view.animate_box_open_then_close(box_coords.x, box_coords.y)
+                    # main_board_view.animate_box_open(box_coords.x, box_coords.y)
+                    main_board_view.select(box_coords.x, box_coords.y)
                     print('({}, {})'.format(box_coords.x, box_coords.y))
                 else:
                     print(None)
