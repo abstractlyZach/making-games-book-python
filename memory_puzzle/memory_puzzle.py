@@ -61,6 +61,10 @@ def main():
     main_board = get_randomized_board()
     revealed_boxes = generate_revealed_boxes_data(False)
 
+    first_selection = None
+
+    DISPLAY_SURFACE.fill(BG_COLOR)
+    start_game_animation(main_board)
 
     while True:
         for event in pygame.event.get():
@@ -107,7 +111,18 @@ def get_randomized_board():
         board.append(column)
     return board
 
+def generate_revealed_boxes_data(value):
+    revealed_boxes = []
+    for column in range(BOARD_WIDTH):
+        revealed_boxes.append([value] * BOARD_HEIGHT)
+    return revealed_boxes
 
+def start_game_animation(board):
+    covered_boxes = generate_revealed_boxes_data(False)
+    box_coords_to_animate = []
+    for x in range(BOARD_WIDTH):
+        for y in range(BOARD_HEIGHT):
+            box_coords_to_animate.append()
 
 
 if __name__ == '__main__':
