@@ -70,6 +70,14 @@ class BoardView(object):
                                     for x in range(self._board.width)]
         self._first_selection = None
 
+    def _update_animation_statuses(self):
+        for x in range(self._board.width):
+            for y in range(self._board.height):
+                if self._board.is_revealed(x, y):
+                    self._animation_statuses[x][y].coverage = 0
+                else:
+                    self._animation_statuses[x][y].coverage = self._box_size
+
     def draw_board(self):
         self._display_surface.fill(self._background_color)
         self._progress_all_animations()
@@ -106,6 +114,7 @@ class BoardView(object):
             coverage = animation_status.coverage
             if coverage <= 0 or coverage >= self._box_size:
                 animation_status.end_animation()
+                self._update_animation_statuses()
 
     def are_animations_active(self):
         for box_x, box_y in self._board.boxes():
@@ -254,6 +263,7 @@ class BoardView(object):
         )
 
     def select(self, x, y):
+        print(x, y)
         if self._board.is_revealed(x, y):
             return
         else:
@@ -268,28 +278,20 @@ class BoardView(object):
 
     def _second_select(self, second_select_x, second_select_y):
         self._animate_selection(second_select_x, second_select_y)
-        first_select_x, first_select_y = self._first_selection
-        self._first_selection = None
-        first_icon = self._board.get_shape_and_color(first_select_x, first_select_y)
-        second_icon = self._board.get_shape_and_color(second_select_x, second_select_y)
-        if first_icon == second_icon:
-            return
-        else:
-            self._handle_no_match([(first_select_x, first_select_y), (second_select_x, second_select_y)])
+        # first_select_x, first_select_y = self._first_selection
+        # self._first_selection = None
+        # first_icon = self._board.get_shape_and_color(first_select_x, first_select_y)
+        # second_icon = self._board.get_shape_and_color(second_select_x, second_select_y)
+        # if first_icon == second_icon:
+        #     return
+        # else:
+        #     self._handle_no_match([(first_select_x, first_select_y), (second_select_x, second_select_y)])
 
     def _animate_selection(self, x, y):
         self.animate_box_open(x, y)
         self._board.reveal(x, y)
-        while self.are_animations_active():
-            time.sleep(.2)
-        self._animation_statuses[x][y].coverage = 0
 
     def _handle_no_match(self, coords_to_unselect):
         for x, y in coords_to_unselect:
             self.animate_box_close(x, y)
             self._board.cover(x, y)
-        while self.are_animations_active():
-            time.sleep(.2)
-        for x, y in coords_to_unselect:
-            self._animation_statuses[x][y].coverage = self._box_size
-
