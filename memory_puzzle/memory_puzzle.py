@@ -1,3 +1,4 @@
+import math
 import random
 import sys
 
@@ -6,47 +7,7 @@ from pygame.locals import QUIT, KEYUP, K_ESCAPE, MOUSEBUTTONUP, MOUSEMOTION
 
 import coords
 
-# todo: move all these things to a config file
-FPS = 30
-WINDOW_WIDTH = 640
-WINDOW_HEIGHT = 480
-REVEAL_SPEED = 8
-BOX_SIZE = 40
-GAP_SIZE = 10 # size of gap between boxes
-BOARD_WIDTH = 10 # width in # of boxes
-BOARD_HEIGHT = 7 # height in # of boxes
-assert(BOARD_HEIGHT * BOARD_WIDTH % 2 == 0,
-       'Board needs to have an even number of boxes for pairs of matches.')
-X_MARGIN = int((WINDOW_WIDTH - (BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
-Y_MARGIN = int((WINDOW_HEIGHT- (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
-
-#            R    G    B
-GRAY     = (100, 100, 100)
-NAVYBLUE = ( 60,  60, 100)
-WHITE    = (255, 255, 255)
-RED      = (255,   0,   0)
-GREEN    = (  0, 255,   0)
-BLUE     = (  0,   0, 255)
-YELLOW   = (255, 255,   0)
-ORANGE   = (255, 128,   0)
-PURPLE   = (255,   0, 255)
-CYAN     = (  0, 255, 255)
-
-BG_COLOR = NAVYBLUE
-LIGHT_BG_COLOR = GRAY
-BOX_COLOR = WHITE
-HIGHLIGHT_COLOR = BLUE
-
-DONUT = 'donut'
-SQUARE = 'square'
-DIAMOND = 'diamond'
-LINES = 'lines'
-OVAL = 'oval'
-
-ALL_COLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
-ALL_SHAPES = (DONUT, SQUARE, DIAMOND, LINES, OVAL)
-assert(len(ALL_COLORS) * len(ALL_SHAPES) * 2 >= BOARD_WIDTH * BOARD_HEIGHT,
-       "Board is too big for the number of shapes/colors defined.")
+from settings import FPS, WINDOW_WIDTH, WINDOW_HEIGHT, BOARD_WIDTH, BOARD_HEIGHT, BG_COLOR, ALL_COLORS, ALL_SHAPES
 
 def main():
     """Sets up the game and runs the main loop"""
@@ -64,7 +25,7 @@ def main():
     first_selection = None
 
     DISPLAY_SURFACE.fill(BG_COLOR)
-    start_game_animation(main_board)
+    # start_game_animation(main_board)
 
     while True:
         for event in pygame.event.get():
@@ -73,22 +34,20 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif event.type == MOUSEBUTTONUP:
-                mouse_coords = misc.Coords(event.pos[0], event.pos[1], 'pixel')
-                box_coords = main_board_view.get_box_at_pixel(mouse_coords)
-                if box_coords:
-                    box_coords = misc.Coords(box_coords[0], box_coords[1], 'board')
+                mouse_coords = coords.PixelCoords(event.pos[0], event.pos[1])
+                if mouse_coords.box_x is not None:
                     # main_board.toggle_reveal(box_coords.x, box_coords.y)
                     # main_board_view.animate_box_open_then_close(box_coords.x, box_coords.y)
                     # main_board_view.animate_box_open(box_coords.x, box_coords.y)
-                    main_board_view.select(box_coords.x, box_coords.y)
-                    print('({}, {})'.format(box_coords.x, box_coords.y))
+                    # main_board_view.select(box_coords.x, box_coords.y)
+                    print('({}, {})'.format(mouse_coords.box_x, mouse_coords.box_y))
                 else:
                     print(None)
-            elif event.type == MOUSEMOTION:
-                mouse_coords = misc.Coords(event.pos[0], event.pos[1], 'pixel')
-                box_coords = main_board_view.get_box_at_pixel(mouse_coords)
+            # elif event.type == MOUSEMOTION:
+            #     mouse_coords = misc.Coords(event.pos[0], event.pos[1], 'pixel')
+            #     box_coords = main_board_view.get_box_at_pixel(mouse_coords)
 
-        main_board_view.draw_board()
+        # main_board_view.draw_board()
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
 
@@ -98,7 +57,7 @@ def get_randomized_board():
         for shape in ALL_SHAPES:
             available_icons.append((shape, color))
     random.shuffle(available_icons)
-    num_icons_to_use = BOARD_WIDTH * BOARD_HEIGHT / 2
+    num_icons_to_use = math.floor(BOARD_WIDTH * BOARD_HEIGHT / 2)
     icons_to_use = available_icons[:num_icons_to_use] * 2
     random.shuffle(icons_to_use)
     # create board
@@ -122,7 +81,14 @@ def start_game_animation(board):
     box_coords_to_animate = []
     for x in range(BOARD_WIDTH):
         for y in range(BOARD_HEIGHT):
-            box_coords_to_animate.append()
+            box_coords_to_animate.append(coords.BoxCoords(x, y))
+
+def draw_board(board):
+    for x in range(BOARD_WIDTH):
+        for y in range(BOARD_HEIGHT):
+            DISPLAY_SURFACE
+
+
 
 
 if __name__ == '__main__':
