@@ -17,8 +17,18 @@ def test_pixel_coords_in_first_cell():
     click = coords.PixelCoords(76, 71)
     assert click.box_x == 0
     assert click.box_y == 0
+    click = coords.PixelCoords(114, 109)
+    assert click.box_x == 0
+    assert click.box_y == 0
 
-def test_pixel_coords_in_between_first_and_second_cells():
-    click = coords.PixelCoords(120, 115)
-    assert click.box_x == None
-    assert click.box_y == None
+def test_pixel_coords_in_between_first_and_second_cells_horizontally():
+    for i in range(115, 125):
+        click = coords.PixelCoords(i, 120)
+        assert click.box_x == None
+        assert click.box_y == None
+
+def test_pixel_coords_in_between_first_and_second_cells_vertically():
+    for i in range(110, 120):
+        click = coords.PixelCoords(120, i)
+        assert click.box_x == None
+        assert click.box_y == None

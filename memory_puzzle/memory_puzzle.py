@@ -1,3 +1,4 @@
+from collections import namedtuple
 import math
 import random
 import sys
@@ -5,9 +6,12 @@ import sys
 import pygame
 from pygame.locals import QUIT, KEYUP, K_ESCAPE, MOUSEBUTTONUP, MOUSEMOTION
 
+import board
 import coords
-
 from settings import FPS, WINDOW_WIDTH, WINDOW_HEIGHT, BOARD_WIDTH, BOARD_HEIGHT, BG_COLOR, ALL_COLORS, ALL_SHAPES
+import settings
+
+GameState = namedtuple('GameState', ['board', 'reveal_data', 'display_surface'])
 
 def main():
     """Sets up the game and runs the main loop"""
@@ -20,7 +24,8 @@ def main():
     mouse_coords = coords.PixelCoords(0, 0)
 
     main_board = get_randomized_board()
-    revealed_boxes = generate_revealed_boxes_data(False)
+    revealed_boxes = board.RevealedBoxes(False)
+    game_state = GameState([], revealed_boxes, DISPLAY_SURFACE)
 
     first_selection = None
 
@@ -48,6 +53,7 @@ def main():
             #     box_coords = main_board_view.get_box_at_pixel(mouse_coords)
 
         # main_board_view.draw_board()
+        draw_board(game_state)
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
 
@@ -70,23 +76,23 @@ def get_randomized_board():
         board.append(column)
     return board
 
-def generate_revealed_boxes_data(value):
-    revealed_boxes = []
-    for column in range(BOARD_WIDTH):
-        revealed_boxes.append([value] * BOARD_HEIGHT)
-    return revealed_boxes
-
-def start_game_animation(board):
-    covered_boxes = generate_revealed_boxes_data(False)
+def start_game_animation(game_state):
+    covered_boxes = board.RevealedBoxes(False)
     box_coords_to_animate = []
     for x in range(BOARD_WIDTH):
         for y in range(BOARD_HEIGHT):
             box_coords_to_animate.append(coords.BoxCoords(x, y))
 
-def draw_board(board):
-    for x in range(BOARD_WIDTH):
-        for y in range(BOARD_HEIGHT):
-            DISPLAY_SURFACE
+def draw_board(game_state):
+    for coord in coords.get_all_box_coords():
+        if not game_state.reveal_data.is_revealed(coord):
+            top_left_corner_coord = coords.top_left_coords_of_box(coord)
+            pygame.draw.rect(game_state.display_surface, settings.BOX_COLOR,
+                             (top_left_corner_coord.pixel_x,
+                              top_left_corner_coord.pixel_y,
+                              settings.BOX_SIZE,
+                              settings.BOX_SIZE)
+                             )
 
 
 

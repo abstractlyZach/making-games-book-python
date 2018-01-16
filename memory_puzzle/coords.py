@@ -1,6 +1,20 @@
 import math
 
+import settings
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT, BOX_SIZE, GAP_SIZE, X_MARGIN, Y_MARGIN
+
+def get_all_box_coords():
+    all_coords = []
+    for x in range(settings.BOARD_WIDTH):
+        for y in range(settings.BOARD_HEIGHT):
+            all_coords.append(BoxCoords(x, y))
+    return all_coords
+
+def top_left_coords_of_box(coords):
+    left = (coords.box_x * (BOX_SIZE + GAP_SIZE)) + X_MARGIN + int(GAP_SIZE
+                                                                   / 2)
+    top = (coords.box_y * (BOX_SIZE + GAP_SIZE)) + Y_MARGIN + int(GAP_SIZE / 2)
+    return PixelCoords(left, top)
 
 
 class PixelCoords(object):
