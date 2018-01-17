@@ -7,8 +7,10 @@ import pygame
 from pygame.locals import QUIT, KEYUP, K_ESCAPE, MOUSEBUTTONUP, MOUSEMOTION
 
 import board
+import constants
 import coords
-from settings import FPS, WINDOW_WIDTH, WINDOW_HEIGHT, BOARD_WIDTH, BOARD_HEIGHT, BG_COLOR, ALL_COLORS, ALL_SHAPES
+from settings import FPS, WINDOW_WIDTH, WINDOW_HEIGHT, BOARD_WIDTH, BOARD_HEIGHT
+from constants import ALL_SHAPES, BG_COLOR, ALL_COLORS
 import settings
 
 GameState = namedtuple('GameState', ['board', 'reveal_data', 'display_surface'])
@@ -33,6 +35,7 @@ def main():
     # start_game_animation(main_board)
 
     while True:
+        DISPLAY_SURFACE.fill(BG_COLOR)
         for event in pygame.event.get():
             if event.type == QUIT or \
                     (event.type == KEYUP and event.key == K_ESCAPE):
@@ -45,7 +48,8 @@ def main():
                     # main_board_view.animate_box_open_then_close(box_coords.x, box_coords.y)
                     # main_board_view.animate_box_open(box_coords.x, box_coords.y)
                     # main_board_view.select(box_coords.x, box_coords.y)
-                    print('({}, {})'.format(mouse_coords.box_x, mouse_coords.box_y))
+                    # print('({}, {})'.format(mouse_coords.box_x, mouse_coords.box_y))
+                    game_state.reveal_data.toggle(mouse_coords)
                 else:
                     print(None)
             # elif event.type == MOUSEMOTION:
@@ -87,7 +91,7 @@ def draw_board(game_state):
     for coord in coords.get_all_box_coords():
         if not game_state.reveal_data.is_revealed(coord):
             top_left_corner_coord = coords.top_left_coords_of_box(coord)
-            pygame.draw.rect(game_state.display_surface, settings.BOX_COLOR,
+            pygame.draw.rect(game_state.display_surface, constants.BOX_COLOR,
                              (top_left_corner_coord.pixel_x,
                               top_left_corner_coord.pixel_y,
                               settings.BOX_SIZE,

@@ -18,3 +18,7 @@ class RevealedBoxes(object):
     def is_revealed(self, coord):
         return self._revealed_boxes[coord.box_x][coord.box_y]
 
+    def toggle(self, coord):
+        old_value = self.is_revealed(coord)
+        self._set_box(coord, not old_value)
+
