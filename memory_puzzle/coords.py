@@ -21,8 +21,66 @@ class PixelCoords(object):
     def __init__(self, x, y):
         self._pixel_x = x
         self._pixel_y = y
-        self._box_x = None
-        self._box_y = None
+        self._calculate_box_x()
+        self._calculate_box_y()
+
+    def _calculate_box_x(self):
+        self._check_x_is_in_board_bounds()
+        if self._x_out_of_bounds:
+            self._box_x = None
+        else:
+            self._check_x_within_board()
+
+    def _check_x_is_in_board_bounds(self):
+        in_left_margin = self._pixel_x <= X_MARGIN
+        in_right_margin = self._pixel_x >= WINDOW_WIDTH - X_MARGIN
+        if in_left_margin or in_right_margin:
+            self._x_out_of_bounds = True
+        else:
+            self._x_out_of_bounds = False
+
+    def _check_x_within_board(self):
+        pixel_position_on_board = self._pixel_x - X_MARGIN
+        container_x = math.floor(pixel_position_on_board / (BOX_SIZE + GAP_SIZE))
+        if self._pixel_position_is_within_box_area(pixel_position_on_board):
+            self._box_x = container_x
+        else:
+            self._box_x = None
+
+    def _pixel_position_is_within_box_area(self, pixel_position):
+        distance_from_container_boundaries = pixel_position % \
+                                             (BOX_SIZE + GAP_SIZE)
+        box_distance_from_container_bounds = GAP_SIZE / 2
+        before_box = distance_from_container_boundaries > \
+                           box_distance_from_container_bounds
+        after_box = distance_from_container_boundaries < \
+                            (BOX_SIZE + GAP_SIZE) - \
+                            box_distance_from_container_bounds
+        return before_box and after_box
+
+
+    def _calculate_box_y(self):
+        self._check_y_is_in_board_bounds()
+        if self._y_out_of_bounds:
+            self._box_y = None
+        else:
+            self._check_y_within_board()
+
+    def _check_y_within_board(self):
+        pixel_position_on_board = self._pixel_y - Y_MARGIN
+        container_y = math.floor(pixel_position_on_board / (BOX_SIZE + GAP_SIZE))
+        if self._pixel_position_is_within_box_area(pixel_position_on_board):
+            self._box_y = container_y
+        else:
+            self._box_y = None
+
+    def _check_y_is_in_board_bounds(self):
+        in_top_margin = self._pixel_y <= Y_MARGIN
+        in_bottom_margin = self._pixel_y >= WINDOW_HEIGHT - Y_MARGIN
+        if in_top_margin or in_bottom_margin:
+            self._y_out_of_bounds = True
+        else:
+            self._y_out_of_bounds = False
 
     @property
     def pixel_x(self):
@@ -34,63 +92,15 @@ class PixelCoords(object):
 
     @property
     def box_x(self):
-        if self._box_x is None:
-            self._calculate_box_x()
         return self._box_x
-
-    def _calculate_box_x(self):
-        if not self._x_is_in_bounds():
-            return
-        pixel_position_on_board = self._pixel_x - X_MARGIN
-        container_x = math.floor(pixel_position_on_board / (BOX_SIZE + GAP_SIZE))
-        distance_from_container_boundaries = pixel_position_on_board % (BOX_SIZE + GAP_SIZE)
-        box_distance_from_container_bounds = GAP_SIZE / 2
-        left_side_in_box = distance_from_container_boundaries > \
-                           box_distance_from_container_bounds
-        right_side_in_box = distance_from_container_boundaries < \
-                            (BOX_SIZE + GAP_SIZE) - box_distance_from_container_bounds
-        if left_side_in_box and right_side_in_box:
-            self._box_x = container_x
-        else:
-            return
-
-    def _x_is_in_bounds(self):
-        if self._pixel_x <= X_MARGIN:
-            return False
-        elif self._pixel_x >= WINDOW_WIDTH - X_MARGIN:
-            return False
-        else:
-            return True
 
     @property
     def box_y(self):
-        if self._box_y is None:
-            self._calculate_box_y()
         return self._box_y
 
-    def _calculate_box_y(self):
-        if not self._y_is_in_bounds():
-            return
-        pixel_position_on_board = self._pixel_y - Y_MARGIN
-        container_y = math.floor(pixel_position_on_board / (BOX_SIZE + GAP_SIZE))
-        distance_from_container_boundaries = pixel_position_on_board % (BOX_SIZE + GAP_SIZE)
-        box_distance_from_container_bounds = GAP_SIZE / 2
-        top_side_in_box = distance_from_container_boundaries > \
-                           box_distance_from_container_bounds
-        bottom_side_in_box = distance_from_container_boundaries < \
-                            (BOX_SIZE + GAP_SIZE) - box_distance_from_container_bounds
-        if top_side_in_box and bottom_side_in_box:
-            self._box_y = container_y
-        else:
-            return
-
-    def _y_is_in_bounds(self):
-        if self._pixel_y <= Y_MARGIN:
-            return False
-        elif self._pixel_y >= WINDOW_HEIGHT- Y_MARGIN:
-            return False
-        else:
-            return True
+    @property
+    def in_a_box(self):
+        return (self.box_x is not None) and (self.box_y is not None)
 
 
 class BoxCoords(object):

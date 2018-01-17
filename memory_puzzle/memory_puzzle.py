@@ -40,7 +40,7 @@ def main():
                 sys.exit()
             elif event.type == MOUSEBUTTONUP:
                 mouse_coords = coords.PixelCoords(event.pos[0], event.pos[1])
-                if mouse_coords.box_x is not None:
+                if mouse_coords.in_a_box:
                     # main_board.toggle_reveal(box_coords.x, box_coords.y)
                     # main_board_view.animate_box_open_then_close(box_coords.x, box_coords.y)
                     # main_board_view.animate_box_open(box_coords.x, box_coords.y)
