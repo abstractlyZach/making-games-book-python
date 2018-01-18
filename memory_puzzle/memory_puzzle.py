@@ -12,6 +12,7 @@ import coords
 from settings import FPS, WINDOW_WIDTH, WINDOW_HEIGHT, BOARD_WIDTH, BOARD_HEIGHT
 from constants import ALL_SHAPES, BG_COLOR, ALL_COLORS
 import settings
+import shape
 
 GameState = namedtuple('GameState', ['board', 'reveal_data', 'display_surface'])
 
@@ -26,8 +27,8 @@ def main():
     mouse_coords = coords.PixelCoords(0, 0)
 
     main_board = get_randomized_board()
-    revealed_boxes = board.RevealedBoxes(False)
-    game_state = GameState([], revealed_boxes, DISPLAY_SURFACE)
+    revealed_boxes = board.RevealedBoxes(True)
+    game_state = GameState(main_board, revealed_boxes, DISPLAY_SURFACE)
 
     first_selection = None
 
@@ -97,6 +98,12 @@ def draw_board(game_state):
                               settings.BOX_SIZE,
                               settings.BOX_SIZE)
                              )
+        else:
+            icon = game_state.board[coord.box_x][coord.box_y]
+            if icon[0] == constants.SQUARE:
+                shape_drawer = shape.Square(icon[1], coord,
+                                            game_state.display_surface)
+                shape_drawer.draw()
 
 
 
