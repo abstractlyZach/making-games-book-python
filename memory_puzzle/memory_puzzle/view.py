@@ -3,6 +3,7 @@ import logging
 import pygame
 
 from . import coords
+from . import constants
 from . import events
 from . import settings
 
@@ -14,6 +15,7 @@ class GraphicalView(object):
         self._model = model
         self._is_initialized = False
         self._screen = None
+        self._clicks = []
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -23,6 +25,8 @@ class GraphicalView(object):
             self.initialize()
         elif isinstance(event, events.TickEvent):
             self.render_all()
+        elif isinstance(event, events.ClickEvent):
+            self._handle_click(event.coords)
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
@@ -41,6 +45,8 @@ class GraphicalView(object):
         self._display_surface.fill(settings.BG_COLOR)
         for coord in coords.get_all_box_coords():
             self._draw_box_cover(coord, settings.BOX_SIZE)
+        for click_coord in self._clicks:
+            self._draw_x(click_coord, constants.GREEN)
         pygame.display.update()
 
     def _draw_box_cover(self, box_coords, coverage):
@@ -52,6 +58,25 @@ class GraphicalView(object):
                           settings.BOX_SIZE, settings.BOX_SIZE)
             pygame.draw.rect(self._display_surface, settings.BOX_COLOR,
                              rect_tuple)
+
+    def _handle_click(self, click_coords):
+        if len(self._clicks) >= 3:
+            self._clicks.pop(0)
+        self._clicks.append(click_coords)
+
+    def _draw_x(self, coord, color):
+        edge_distance = 10
+        width = 3
+        top_left = (coord.pixel_x - edge_distance,
+                    coord.pixel_y - edge_distance)
+        bottom_right = (coord.pixel_x + edge_distance,
+                        coord.pixel_y + edge_distance)
+        pygame.draw.line(self._display_surface, color, top_left, bottom_right)
+        top_right = (coord.pixel_x + edge_distance,
+                     coord.pixel_y - edge_distance)
+        bottom_left = (coord.pixel_x - edge_distance,
+                       coord.pixel_y + edge_distance)
+        pygame.draw.line(self._display_surface, color, top_right, bottom_left)
 
 
 

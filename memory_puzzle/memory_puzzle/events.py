@@ -52,6 +52,10 @@ class ClickEvent(InputEvent):
         self._name = 'Click Event'
         self._position = position
 
+    @property
+    def coords(self):
+        return self._position
+
     def __str__(self):
         return '{}: {}'.format(self._name, self._position)
 
