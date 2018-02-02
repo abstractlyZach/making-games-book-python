@@ -1,6 +1,6 @@
-from mvc import eventmanager
-from mvc import events
-from mvc import model
+from memory_puzzle import eventmanager
+from memory_puzzle import events
+from memory_puzzle import model
 
 class QuitsAfterFourTicks(object):
     """sends a quit event after 4 ticks"""
