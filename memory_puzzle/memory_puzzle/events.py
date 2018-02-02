@@ -60,4 +60,7 @@ class ClickEvent(InputEvent):
         return '{}: {}'.format(self._name, self._position)
 
 
+class NewGameEvent(Event):
+    def __init__(self):
+        self._name = 'New Game Event'
 
