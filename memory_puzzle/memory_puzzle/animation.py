@@ -14,12 +14,14 @@ class AnimationStatusTracker(object):
     def get_status(self, coord):
         return self._animation_statuses[coord.box_x][coord.box_y]
 
+    def get_active_animations(self):
+        return [animation_status
+                for row in self._animation_statuses
+                for animation_status in row
+                if animation_status.being_animated]
+
     def any_animations_active(self):
-        for row in self._animation_statuses:
-            for animation_status in row:
-                if animation_status.being_animated:
-                    return True
-        return False
+        return len(self.get_active_animations()) > 0
 
 
 class AnimationStatus(object):
