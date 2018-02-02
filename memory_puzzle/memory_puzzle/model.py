@@ -21,6 +21,9 @@ class Model(object):
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
+        elif isinstance(event, events.ClickEvent):
+            if event.coords.in_a_box:
+                self._board.toggle_reveal(event.coords)
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
