@@ -42,53 +42,48 @@ class Board(object):
     def get_shape_and_color(self, coord):
         """
         Args:
-            x: box's x coordinate
-            y: box's y coordinate
+            coord: box's coordinates
         Returns:
             The shape and color of the icon in this box.
         """
         return self._board[coord.box_x][coord.box_y]
 
-    def is_revealed(self, x, y):
+    def is_revealed(self, coord):
         """
         Args:
-            x: box's x coordinate
-            y: box's y coordinate
+            coord: box's coordinates
         Returns:
             True if the box is revealed, else False.
         """
-        return self._revealed[x][y]
+        return self._revealed[coord.box_x][coord.box_y]
 
-    def reveal(self, x, y):
+    def reveal(self, coord):
         """
         Reveal the box at the coordinates
         Args:
-            x: box's x coordinate
-            y: box's y coordinate
+            coord: box's coordinates
         """
-        self._revealed[x][y] = True
+        self._revealed[coord.box_x][coord.box_y] = True
 
-    def cover(self, x, y):
+    def cover(self, coord):
         """
         Hide the box at the coordinates
         Args:
-            x: box's x coordinate
-            y: box's y coordinate
+            coord: box's coordindates
         """
-        self._revealed[x][y] = False
+        self._revealed[coord.box_x][coord.box_y] = False
 
-    def toggle_reveal(self, x, y):
+    def toggle_reveal(self, coord):
         """
         Toggle the reveal state of the box at the coordinates
         Args:
-            x: box's x coordinate
-            y: box's y coordinate
+            coord: box's coordinates
         """
-        self._revealed[x][y] = not self.is_revealed(x, y)
+        self._revealed[coord.box_x][coord.box_y] = not self.is_revealed(coord)
 
     def are_all_revealed(self):
-        for x, y in self.boxes():
-            if not self.is_revealed(x, y):
+        for coord in coords.get_all_box_coords():
+            if not self.is_revealed(coord):
                 return False
         return True
 
