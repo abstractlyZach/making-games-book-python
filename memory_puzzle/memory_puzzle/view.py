@@ -2,6 +2,7 @@ import logging
 
 import pygame
 
+from . import animation
 from . import coords
 from . import constants
 from . import events
@@ -41,6 +42,7 @@ class GraphicalView(object):
         window_dimensions = (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
         self._display_surface = pygame.display.set_mode(window_dimensions)
         self._is_initialized = True
+        self._animation_statuses = animation.AnimationStatusTracker()
         logging.info('View initialized.')
 
     def render_all(self):

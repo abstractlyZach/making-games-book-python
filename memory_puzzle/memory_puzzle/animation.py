@@ -3,6 +3,25 @@
 from . import settings
 
 
+class AnimationStatusTracker(object):
+    """A container used for tracking animation statuses."""
+    def __init__(self, starting_coverage=settings.BOX_SIZE):
+        self._animation_statuses = [
+                [AnimationStatus() for y in range(settings.BOARD_HEIGHT)]
+                for x in range(settings.BOARD_WIDTH)
+        ]
+
+    def get_status(self, coord):
+        return self._animation_statuses[coord.box_x][coord.box_y]
+
+    def any_animations_active(self):
+        for row in self._animation_statuses:
+            for animation_status in row:
+                if animation_status.being_animated:
+                    return True
+        return False
+
+
 class AnimationStatus(object):
     def __init__(self, starting_coverage=0):
         self._coverage = starting_coverage
