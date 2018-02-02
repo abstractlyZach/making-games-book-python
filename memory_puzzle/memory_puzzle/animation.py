@@ -1,3 +1,8 @@
+"""Module for handling animation."""
+
+from . import settings
+
+
 class AnimationStatus(object):
     def __init__(self, starting_coverage=0):
         self._coverage = starting_coverage
@@ -9,9 +14,9 @@ class AnimationStatus(object):
     def coverage(self):
         return self._coverage
 
-    @coverage.setter
-    def coverage(self, new_coverage):
-        self._coverage = new_coverage
+    # @coverage.setter
+    # def coverage(self, new_coverage):
+    #     self._coverage = new_coverage
 
     @property
     def animation_rate(self):
@@ -26,15 +31,21 @@ class AnimationStatus(object):
         self._being_animated = True
         self._will_reverse = will_reverse
 
+    def tick_animation(self):
+        self._coverage += self._animation_rate
+        self._bring_coverage_within_box_bounds()
+        if (self._coverage == settings.BOX_SIZE) or (self._coverage == 0):
+            self._handle_animation_reaching_border()
 
-    def end_animation(self):
+    def _bring_coverage_within_box_bounds(self):
+        if self._coverage > settings.BOX_SIZE:
+            self._coverage = settings.BOX_SIZE
+        elif self._coverage < 0:
+            self._coverage = 0
+
+    def _handle_animation_reaching_border(self):
         if self._will_reverse:
             self._animation_rate = -self._animation_rate
             self._will_reverse = False
         else:
             self._being_animated = False
-            self._animation_rate = 0
-
-    def tick_animation(self):
-        self._coverage += self._animation_rate
-
