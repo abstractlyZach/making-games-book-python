@@ -18,15 +18,21 @@ class Controller(object):
                 self._handle_event(input_event)
 
     def _handle_event(self, event):
-        if event.type == pygame.QUIT:
-            self._event_manager.post(events.QuitEvent())
-        elif (event.type == pygame.KEYUP) and \
-                (event.key == pygame.K_ESCAPE):
+        if self._is_quit_event(event):
             self._event_manager.post(events.QuitEvent())
         elif (event.type == pygame.KEYUP):
             self._event_manager.post(events.KeyPressEvent(event.key))
         elif (event.type == pygame.MOUSEBUTTONUP):
             mouse_coords = coords.PixelCoords(event.pos[0], event.pos[1])
             self._event_manager.post(events.ClickEvent(mouse_coords))
+
+    def _is_quit_event(self, event):
+        if event.type == pygame.QUIT:
+            return True
+        elif (event.type == pygame.KEYUP) and \
+                (event.key == pygame.K_ESCAPE):
+            return True
+        else:
+            return False
 
 
