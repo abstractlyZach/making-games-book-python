@@ -66,7 +66,6 @@ class GraphicalView(object):
 
     def _draw_x(self, coord, color):
         edge_distance = 10
-        width = 3
         top_left = (coord.pixel_x - edge_distance,
                     coord.pixel_y - edge_distance)
         bottom_right = (coord.pixel_x + edge_distance,
