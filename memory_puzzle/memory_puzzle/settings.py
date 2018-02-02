@@ -15,6 +15,10 @@ Y_MARGIN = int((WINDOW_HEIGHT- (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
 assert(BOARD_HEIGHT * BOARD_WIDTH % 2 == 0,
        'Board needs to have an even number of boxes for pairs of matches.')
 
+assert(len(constants.ALL_COLORS) * len(constants.ALL_SHAPES) * 2 >=
+       BOARD_WIDTH * BOARD_HEIGHT,
+       "Board is too big for the number of shapes/colors defined.")
+
 BG_COLOR = constants.NAVYBLUE
 LIGHT_BG_COLOR = constants.GRAY
 BOX_COLOR = constants.WHITE

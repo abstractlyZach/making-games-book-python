@@ -1,7 +1,5 @@
 """Constants to be used in the memory puzzle"""
 
-from . import settings
-
 DONUT = 'donut'
 SQUARE = 'square'
 DIAMOND = 'diamond'
@@ -23,6 +21,3 @@ CYAN     = (  0, 255, 255)
 
 ALL_COLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
 
-assert(len(ALL_COLORS) * len(ALL_SHAPES) * 2 >= settings.BOARD_WIDTH *
-       settings.BOARD_HEIGHT,
-       "Board is too big for the number of shapes/colors defined.")
