@@ -14,10 +14,6 @@ class AnimationStatus(object):
     def coverage(self):
         return self._coverage
 
-    # @coverage.setter
-    # def coverage(self, new_coverage):
-    #     self._coverage = new_coverage
-
     @property
     def animation_rate(self):
         return self._animation_rate
