@@ -78,17 +78,10 @@ class Diamond(Icon):
 
 class Lines(Icon):
     def draw(self, display_surface):
-        self._draw_diagonals_bottom_left_to_top_right(display_surface)
-        self._draw_diagonals_top_left_to_bottom_right(display_surface)
+        self._draw_top_lines(display_surface)
+        self._draw_bottom_lines(display_surface)
 
-    def _draw_diagonals_bottom_left_to_top_right(self, display_surface):
-        for i in range(0, settings.BOX_SIZE, 4):
-            bottom_left = (self._box_left, self._box_top + i)
-            top_right = (self._box_left + i, self._box_top)
-            pygame.draw.line(display_surface, self._color,
-                             bottom_left, top_right)
-
-    def _draw_diagonals_top_left_to_bottom_right(self, display_surface):
+    def _draw_top_lines(self, display_surface):
         for i in range(0, settings.BOX_SIZE, 4):
             box_bottom = self._box_top + settings.BOX_SIZE
             top_left = (self._box_left + i, box_bottom)
@@ -96,6 +89,13 @@ class Lines(Icon):
             bottom_right = (box_right, self._box_top + i)
             pygame.draw.line(display_surface, self._color,
                              top_left, bottom_right)
+
+    def _draw_bottom_lines(self, display_surface):
+        for i in range(0, settings.BOX_SIZE, 4):
+            bottom_left = (self._box_left, self._box_top + i)
+            top_right = (self._box_left + i, self._box_top)
+            pygame.draw.line(display_surface, self._color,
+                             bottom_left, top_right)
 
 
 class Oval(Icon):
