@@ -30,6 +30,7 @@ class Model(object):
         each loop."""
         self._running = True
         self._event_manager.post(events.InitializeEvent())
+        self._event_manager.post(events.NewGameEvent())
         while self._running:
             tick = events.TickEvent()
             self._event_manager.post(tick)
