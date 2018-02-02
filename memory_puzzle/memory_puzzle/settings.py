@@ -10,7 +10,7 @@ GAP_SIZE = 10 # size of gap between boxes
 BOARD_WIDTH = 10 # width in # of boxes
 BOARD_HEIGHT = 7 # height in # of boxes
 X_MARGIN = int((WINDOW_WIDTH - (BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
-Y_MARGIN = int((WINDOW_HEIGHT- (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
+Y_MARGIN = int((WINDOW_HEIGHT - (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
 
 
 # sanity checks

@@ -1,7 +1,10 @@
 import pygame
 
+from . import coords
+from . import constants
 from . import events
 from . import settings
+from . import shape
 
 
 class Model(object):
@@ -11,6 +14,16 @@ class Model(object):
         self._event_manager.register_listener(self)
         self._running = False
         self._clock = pygame.time.Clock()
+        self._icons = [[shape.Square(constants.ORANGE,
+                                    coords.BoxCoords(i, j))
+                        for i in range(3)
+                        for j in range(3)
+                      ], [
+            shape.Donut(constants.PURPLE, coords.BoxCoords(i, j))
+            for i in range(3, 5)
+            for j in range(3, 5)
+
+                       ]]
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -25,3 +38,7 @@ class Model(object):
             tick = events.TickEvent()
             self._event_manager.post(tick)
             self._clock.tick(settings.FPS)
+
+    @property
+    def icons(self):
+        return self._icons

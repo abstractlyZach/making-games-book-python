@@ -45,6 +45,10 @@ class GraphicalView(object):
         self._display_surface.fill(settings.BG_COLOR)
         for coord in coords.get_all_box_coords():
             self._draw_box_cover(coord, settings.BOX_SIZE)
+        self._draw_guidelines(constants.RED)
+        for column in self._model.icons:
+            for icon in column:
+                icon.draw(self._display_surface)
         for click_coord in self._clicks:
             self._draw_x(click_coord, constants.GREEN)
         pygame.display.update()
@@ -76,6 +80,25 @@ class GraphicalView(object):
         bottom_left = (coord.pixel_x - edge_distance,
                        coord.pixel_y + edge_distance)
         pygame.draw.line(self._display_surface, color, top_right, bottom_left)
+
+    def _draw_guidelines(self, color):
+        top_line = settings.Y_MARGIN
+        bottom_line = settings.WINDOW_HEIGHT - settings.Y_MARGIN
+        left_line = settings.X_MARGIN
+        right_line = settings.WINDOW_WIDTH - settings.X_MARGIN
+        pygame.draw.line(self._display_surface, color,
+                         (0, top_line),
+                         (settings.WINDOW_WIDTH, top_line))
+        pygame.draw.line(self._display_surface, color,
+                         (0, bottom_line),
+                         (settings.WINDOW_WIDTH, bottom_line))
+        pygame.draw.line(self._display_surface, color,
+                         (left_line, 0),
+                         (left_line, settings.WINDOW_HEIGHT))
+        pygame.draw.line(self._display_surface, color,
+                         (right_line, 0),
+                         (right_line, settings.WINDOW_HEIGHT))
+
 
 
 
