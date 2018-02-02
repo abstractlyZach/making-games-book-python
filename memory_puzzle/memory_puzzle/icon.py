@@ -2,8 +2,21 @@ import math
 
 import pygame
 
+from . import constants
 from . import settings
 
+
+def create_icon(shape, color, coords):
+    if shape == constants.SQUARE:
+        return Square(color, coords)
+    elif shape == constants.DONUT:
+        return Donut(color, coords)
+    elif shape == constants.DIAMOND:
+        return Diamond(color, coords)
+    elif shape == constants.LINES:
+        return Lines(color, coords)
+    elif shape == constants.OVAL:
+        return Oval(color, coords)
 
 class Icon(object):
     """Base class for icons."""

@@ -46,9 +46,9 @@ class GraphicalView(object):
         for coord in coords.get_all_box_coords():
             self._draw_box_cover(coord, settings.BOX_SIZE)
         self._draw_guidelines(constants.RED)
-        for column in self._model.icons:
-            for icon in column:
-                icon.draw(self._display_surface)
+        for coord in coords.get_all_box_coords():
+            icon = self._model.get_icon(coord)
+            icon.draw(self._display_surface)
         for click_coord in self._clicks:
             self._draw_x(click_coord, constants.GREEN)
         pygame.display.update()

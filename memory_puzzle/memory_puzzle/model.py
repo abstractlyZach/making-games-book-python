@@ -1,10 +1,9 @@
 import pygame
 
-from . import coords
+from . import board
 from . import constants
 from . import events
 from . import settings
-from . import icon
 
 
 class Model(object):
@@ -14,16 +13,10 @@ class Model(object):
         self._event_manager.register_listener(self)
         self._running = False
         self._clock = pygame.time.Clock()
-        self._icons = [[icon.Square(constants.ORANGE,
-                                    coords.BoxCoords(i, j))
-                        for i in range(3)
-                        for j in range(3)
-                        ], [
-            icon.Donut(constants.PURPLE, coords.BoxCoords(i, j))
-            for i in range(3, 5)
-            for j in range(3, 5)
-
-                       ]]
+        self._board = board.Board(settings.BOARD_WIDTH,
+                                  settings.BOARD_HEIGHT,
+                                  constants.ALL_COLORS,
+                                  constants.ALL_SHAPES)
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -39,6 +32,5 @@ class Model(object):
             self._event_manager.post(tick)
             self._clock.tick(settings.FPS)
 
-    @property
-    def icons(self):
-        return self._icons
+    def get_icon(self, coord):
+        return self._board.get_shape_and_color(coord)

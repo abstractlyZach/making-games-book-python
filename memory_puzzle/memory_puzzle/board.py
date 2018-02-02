@@ -1,6 +1,10 @@
 import math
 import random
 
+from . import coords
+from . import icon
+
+
 class Board(object):
     def __init__(self, width, height, colors, shapes):
         self._width = width
@@ -31,13 +35,16 @@ class Board(object):
         for x in range(self._width):
             column = []
             for y in range(self._height):
-                column.append(icons.pop())
+                shape, color = icons.pop()
+                current_icon = icon.create_icon(shape, color,
+                                                coords.BoxCoords(x, y))
+                column.append(current_icon)
             self._board.append(column)
         # mark all cells as unrevealed
         self._revealed = [[False for y in range(self._height)]
                           for x in range(self._width)]
 
-    def get_shape_and_color(self, x, y):
+    def get_shape_and_color(self, coord):
         """
         Args:
             x: box's x coordinate
@@ -45,7 +52,7 @@ class Board(object):
         Returns:
             The shape and color of the icon in this box.
         """
-        return self._board[x][y]
+        return self._board[coord.box_x][coord.box_y]
 
     def is_revealed(self, x, y):
         """
