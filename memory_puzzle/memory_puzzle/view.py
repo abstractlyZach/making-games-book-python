@@ -2,8 +2,9 @@ import logging
 
 import pygame
 
-from . import settings
+from . import coords
 from . import events
+from . import settings
 
 
 class GraphicalView(object):
@@ -38,5 +39,19 @@ class GraphicalView(object):
             return
         # draw stuff
         self._display_surface.fill(settings.BG_COLOR)
+        for coord in coords.get_all_box_coords():
+            self._draw_box_cover(coord, settings.BOX_SIZE)
         pygame.display.update()
+
+    def _draw_box_cover(self, box_coords, coverage):
+        if coverage > settings.BOX_SIZE:
+            raise Exception
+        topleft_corner = coords.top_left_coords_of_box(box_coords)
+        if coverage > 0:
+            rect_tuple = (topleft_corner.pixel_x, topleft_corner.pixel_y,
+                          settings.BOX_SIZE, settings.BOX_SIZE)
+            pygame.draw.rect(self._display_surface, settings.BOX_COLOR,
+                             rect_tuple)
+
+
 
