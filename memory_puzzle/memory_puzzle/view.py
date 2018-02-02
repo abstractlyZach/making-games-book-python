@@ -2,6 +2,7 @@ import logging
 
 import pygame
 
+from . import settings
 from . import events
 
 
@@ -26,9 +27,9 @@ class GraphicalView(object):
         """Set up the pygame graphical display and load graphical resources."""
         pygame.init()
         pygame.font.init()
-        pygame.display.set_caption('demo game')
-        self._screen = pygame.display.set_mode((600, 60))
-        self._small_font = pygame.font.Font(None, 40)
+        pygame.display.set_caption('Memory Game')
+        window_dimensions = (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
+        self._display_surface = pygame.display.set_mode(window_dimensions)
         self._is_initialized = True
         logging.info('View initialized.')
 
@@ -36,5 +37,6 @@ class GraphicalView(object):
         if not self._is_initialized:
             return
         # draw stuff
+        self._display_surface.fill(settings.BG_COLOR)
         pygame.display.update()
 
