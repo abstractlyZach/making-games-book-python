@@ -103,6 +103,10 @@ class PixelCoords(object):
     def in_a_box(self):
         return (self.box_x is not None) and (self.box_y is not None)
 
+    def __str__(self):
+        return '{}: ({}, {})'.format(self.__class__.__name__, self._pixel_x,
+                                     self._pixel_y)
+
 
 class BoxCoords(object):
     def __init__(self, x, y):
