@@ -1,3 +1,4 @@
+import logging
 import weakref
 
 from . import events
@@ -22,7 +23,7 @@ class EventManager(object):
     def post(self, event):
         """Notify all the listeners that an event has occurred."""
         if not isinstance(event, events.TickEvent):
-            print(str(event))
+            logging.info(str(event))
         self._events.append(event)
         for listener in self._listeners.keys():
             listener.notify(event)
