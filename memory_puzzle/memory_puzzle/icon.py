@@ -29,6 +29,10 @@ class Icon(object):
         left_of_container = settings.X_MARGIN + container_distance_from_margin
         self._box_left = left_of_container + math.floor(settings.GAP_SIZE / 2)
 
+    def draw(self, display_surface):
+        raise NotImplementedError("You're using the base icon class!")
+
+
 
 class Square(Icon):
     def draw(self, display_surface):
@@ -58,3 +62,30 @@ class Diamond(Icon):
         left_middle = (self._box_left, self._box_top + self.half)
         point_list = [top_middle, right_middle, bottom_middle, left_middle]
         pygame.draw.polygon(display_surface, self._color, point_list)
+
+class Lines(Icon):
+    def draw(self, display_surface):
+        self._draw_diagonals_bottom_left_to_top_right(display_surface)
+        self._draw_diagonals_top_left_to_bottom_right(display_surface)
+
+    def _draw_diagonals_bottom_left_to_top_right(self, display_surface):
+        for i in range(0, settings.BOX_SIZE, 4):
+            bottom_left = (self._box_left, self._box_top + i)
+            top_right = (self._box_left + i, self._box_top)
+            pygame.draw.line(display_surface, self._color,
+                             bottom_left, top_right)
+
+    def _draw_diagonals_top_left_to_bottom_right(self, display_surface):
+        for i in range(0, settings.BOX_SIZE, 4):
+            box_bottom = self._box_top + settings.BOX_SIZE
+            top_left = (self._box_left + i, box_bottom)
+            box_right = self._box_left + settings.BOX_SIZE
+            bottom_right = (box_right, self._box_top + i)
+            pygame.draw.line(display_surface, self._color,
+                             top_left, bottom_right)
+
+class Oval(Icon):
+    def draw(self, display_surface):
+        bounding_rectangle = (self._box_left, self._box_top + self.quarter,
+                              settings.BOX_SIZE, self.half)
+        pygame.draw.ellipse(display_surface, self._color, bounding_rectangle)
