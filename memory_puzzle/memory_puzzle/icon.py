@@ -2,7 +2,6 @@ import math
 
 import pygame
 
-from . import constants
 from . import settings
 
 
