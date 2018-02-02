@@ -27,6 +27,11 @@ class GraphicalView(object):
             self.render_all()
         elif isinstance(event, events.ClickEvent):
             self._handle_click(event.coords)
+        elif isinstance(event, events.NewGameEvent):
+            self._do_new_game_animation()
+
+    def _do_new_game_animation(self):
+        pass
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
