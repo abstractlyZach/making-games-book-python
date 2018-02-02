@@ -13,11 +13,6 @@ class Board(object):
         self._shapes = shapes
         self._new_board()
 
-    def boxes(self):
-        for x in range(self._width):
-            for y in range(self._height):
-                yield (x, y)
-
     def _new_board(self):
         """Replaces the old board with a new configuration"""
         icons = []
