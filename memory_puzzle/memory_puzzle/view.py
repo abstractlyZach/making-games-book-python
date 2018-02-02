@@ -70,28 +70,6 @@ class GraphicalView(object):
             pygame.draw.rect(self._display_surface, settings.BOX_COLOR,
                              rect_tuple)
 
-    def _draw_click_markers(self):
-        for click_coord in self._clicks:
-            self._draw_x(click_coord, constants.GREEN)
-
-    def _handle_click(self, click_coords):
-        if len(self._clicks) >= 3:
-            self._clicks.pop(0)
-        self._clicks.append(click_coords)
-
-    def _draw_x(self, coord, color):
-        edge_distance = 10
-        top_left = (coord.pixel_x - edge_distance,
-                    coord.pixel_y - edge_distance)
-        bottom_right = (coord.pixel_x + edge_distance,
-                        coord.pixel_y + edge_distance)
-        pygame.draw.line(self._display_surface, color, top_left, bottom_right)
-        top_right = (coord.pixel_x + edge_distance,
-                     coord.pixel_y - edge_distance)
-        bottom_left = (coord.pixel_x - edge_distance,
-                       coord.pixel_y + edge_distance)
-        pygame.draw.line(self._display_surface, color, top_right, bottom_left)
-
     def _draw_guidelines(self, color):
         top_line = settings.Y_MARGIN
         bottom_line = settings.WINDOW_HEIGHT - settings.Y_MARGIN
@@ -110,6 +88,26 @@ class GraphicalView(object):
                          (right_line, 0),
                          (right_line, settings.WINDOW_HEIGHT))
 
+    def _draw_click_markers(self):
+        for click_coord in self._clicks:
+            self._draw_x(click_coord, constants.GREEN)
 
+    def _draw_x(self, coord, color):
+        edge_distance = 10
+        top_left = (coord.pixel_x - edge_distance,
+                    coord.pixel_y - edge_distance)
+        bottom_right = (coord.pixel_x + edge_distance,
+                        coord.pixel_y + edge_distance)
+        pygame.draw.line(self._display_surface, color, top_left, bottom_right)
+        top_right = (coord.pixel_x + edge_distance,
+                     coord.pixel_y - edge_distance)
+        bottom_left = (coord.pixel_x - edge_distance,
+                       coord.pixel_y + edge_distance)
+        pygame.draw.line(self._display_surface, color, top_right, bottom_left)
+
+    def _handle_click(self, click_coords):
+        if len(self._clicks) >= 3:
+            self._clicks.pop(0)
+        self._clicks.append(click_coords)
 
 
