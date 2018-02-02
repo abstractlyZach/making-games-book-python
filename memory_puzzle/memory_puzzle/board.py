@@ -6,6 +6,8 @@ from . import icon
 
 
 class Board(object):
+    """Provides an interface for accessing reveal data and icon data,
+    using coords."""
     def __init__(self, width, height, colors, shapes):
         self._width = width
         self._height = height
@@ -39,12 +41,12 @@ class Board(object):
         self._revealed = [[False for y in range(self._height)]
                           for x in range(self._width)]
 
-    def get_shape_and_color(self, coord):
+    def get_icon(self, coord):
         """
         Args:
             coord: box's coordinates
         Returns:
-            The shape and color of the icon in this box.
+            The icon in this box.
         """
         return self._board[coord.box_x][coord.box_y]
 

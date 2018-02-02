@@ -33,4 +33,4 @@ class Model(object):
             self._clock.tick(settings.FPS)
 
     def get_icon(self, coord):
-        return self._board.get_shape_and_color(coord)
+        return self._board.get_icon(coord)
