@@ -34,3 +34,6 @@ class Model(object):
 
     def get_icon(self, coord):
         return self._board.get_icon(coord)
+
+    def is_revealed(self, coord):
+        return self._board.is_revealed(coord)

@@ -43,15 +43,22 @@ class GraphicalView(object):
             return
         # draw stuff
         self._display_surface.fill(settings.BG_COLOR)
-        for coord in coords.get_all_box_coords():
-            self._draw_box_cover(coord, settings.BOX_SIZE)
+        self._draw_icons()
+        self._draw_box_covers()
         self._draw_guidelines(constants.RED)
-        for coord in coords.get_all_box_coords():
-            icon = self._model.get_icon(coord)
-            icon.draw(self._display_surface)
-        for click_coord in self._clicks:
-            self._draw_x(click_coord, constants.GREEN)
+        self._draw_click_markers()
         pygame.display.update()
+
+    def _draw_icons(self):
+        for coord in coords.get_all_box_coords():
+            if self._model.is_revealed(coord):
+                icon = self._model.get_icon(coord)
+                icon.draw(self._display_surface)
+
+    def _draw_box_covers(self):
+        for coord in coords.get_all_box_coords():
+            if not self._model.is_revealed(coord):
+                self._draw_box_cover(coord, settings.BOX_SIZE)
 
     def _draw_box_cover(self, box_coords, coverage):
         if coverage > settings.BOX_SIZE:
@@ -62,6 +69,10 @@ class GraphicalView(object):
                           settings.BOX_SIZE, settings.BOX_SIZE)
             pygame.draw.rect(self._display_surface, settings.BOX_COLOR,
                              rect_tuple)
+
+    def _draw_click_markers(self):
+        for click_coord in self._clicks:
+            self._draw_x(click_coord, constants.GREEN)
 
     def _handle_click(self, click_coords):
         if len(self._clicks) >= 3:
