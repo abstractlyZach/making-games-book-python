@@ -1,4 +1,5 @@
 """Memory puzzle settings"""
+from . import constants
 
 FPS = 30
 WINDOW_WIDTH = 640
@@ -14,3 +15,7 @@ Y_MARGIN = int((WINDOW_HEIGHT- (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
 assert(BOARD_HEIGHT * BOARD_WIDTH % 2 == 0,
        'Board needs to have an even number of boxes for pairs of matches.')
 
+BG_COLOR = constants.NAVYBLUE
+LIGHT_BG_COLOR = constants.GRAY
+BOX_COLOR = constants.WHITE
+HIGHLIGHT_COLOR = constants.BLUE
