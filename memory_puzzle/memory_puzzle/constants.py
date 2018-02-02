@@ -1,6 +1,6 @@
 """Constants to be used in the memory puzzle"""
 
-import settings
+from . import settings
 
 DONUT = 'donut'
 SQUARE = 'square'
