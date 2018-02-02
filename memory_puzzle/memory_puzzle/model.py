@@ -4,7 +4,7 @@ from . import coords
 from . import constants
 from . import events
 from . import settings
-from . import shape
+from . import icon
 
 
 class Model(object):
@@ -14,12 +14,12 @@ class Model(object):
         self._event_manager.register_listener(self)
         self._running = False
         self._clock = pygame.time.Clock()
-        self._icons = [[shape.Square(constants.ORANGE,
+        self._icons = [[icon.Square(constants.ORANGE,
                                     coords.BoxCoords(i, j))
                         for i in range(3)
                         for j in range(3)
-                      ], [
-            shape.Donut(constants.PURPLE, coords.BoxCoords(i, j))
+                        ], [
+            icon.Donut(constants.PURPLE, coords.BoxCoords(i, j))
             for i in range(3, 5)
             for j in range(3, 5)
 

@@ -6,7 +6,8 @@ from . import constants
 from . import settings
 
 
-class Shape(object):
+class Icon(object):
+    """Base class for icons."""
     quarter = math.floor(settings.BOX_SIZE / 4)
     half = math.floor(settings.BOX_SIZE / 2)
 
@@ -29,7 +30,7 @@ class Shape(object):
         self._box_left = left_of_container + math.floor(settings.GAP_SIZE / 2)
 
 
-class Square(Shape):
+class Square(Icon):
     def draw(self, display_surface):
         rectangle_tuple = (self._box_left + self.quarter,
                            self._box_top + self.quarter,
@@ -38,7 +39,7 @@ class Square(Shape):
         pygame.draw.rect(display_surface, self._color, rectangle_tuple)
 
 
-class Donut(Shape):
+class Donut(Icon):
     def draw(self, display_surface):
         center = (self._box_left + self.half,
                   self._box_top + self.half)
@@ -47,7 +48,7 @@ class Donut(Shape):
         pygame.draw.circle(display_surface, settings.BG_COLOR,
                            center, self.quarter - 5)
 
-class Diamond(Shape):
+class Diamond(Icon):
     def draw(self, display_surface):
         top_middle = (self._box_left + self.half, self._box_top)
         right_middle = (self._box_left + settings.BOX_SIZE,
