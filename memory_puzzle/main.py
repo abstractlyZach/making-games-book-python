@@ -1,9 +1,9 @@
 import logging
 
-from mvc import eventmanager
-from mvc import model
-from mvc import view
-from mvc import controller
+from memory_puzzle import eventmanager
+from memory_puzzle import model
+from memory_puzzle import view
+from memory_puzzle import controller
 
 def set_up_logging():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
