@@ -33,7 +33,6 @@ class Icon(object):
         raise NotImplementedError("You're using the base icon class!")
 
 
-
 class Square(Icon):
     def draw(self, display_surface):
         rectangle_tuple = (self._box_left + self.quarter,
@@ -52,6 +51,7 @@ class Donut(Icon):
         pygame.draw.circle(display_surface, settings.BG_COLOR,
                            center, self.quarter - 5)
 
+
 class Diamond(Icon):
     def draw(self, display_surface):
         top_middle = (self._box_left + self.half, self._box_top)
@@ -62,6 +62,7 @@ class Diamond(Icon):
         left_middle = (self._box_left, self._box_top + self.half)
         point_list = [top_middle, right_middle, bottom_middle, left_middle]
         pygame.draw.polygon(display_surface, self._color, point_list)
+
 
 class Lines(Icon):
     def draw(self, display_surface):
@@ -83,6 +84,7 @@ class Lines(Icon):
             bottom_right = (box_right, self._box_top + i)
             pygame.draw.line(display_surface, self._color,
                              top_left, bottom_right)
+
 
 class Oval(Icon):
     def draw(self, display_surface):
