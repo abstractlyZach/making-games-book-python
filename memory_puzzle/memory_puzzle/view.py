@@ -25,6 +25,7 @@ class GraphicalView(object):
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
         elif isinstance(event, events.TickEvent):
+            self._progress_animations()
             self.render_all()
         elif isinstance(event, events.ClickEvent):
             self._handle_click(event.coords)
@@ -45,27 +46,35 @@ class GraphicalView(object):
         self._animation_statuses = animation.AnimationStatusTracker()
         logging.info('View initialized.')
 
+    def _progress_animations(self):
+        for animation in self._animation_statuses.get_active_animations():
+            animation.tick_animation()
+
     def render_all(self):
         if not self._is_initialized:
             return
         # draw stuff
         self._display_surface.fill(settings.BG_COLOR)
-        self._draw_icons()
+        self._draw_visible_icons()
         self._draw_box_covers()
         self._draw_guidelines(constants.RED)
         self._draw_click_markers()
         pygame.display.update()
 
-    def _draw_icons(self):
+    def _draw_visible_icons(self):
         for coord in coords.get_all_box_coords():
-            if self._model.is_revealed(coord):
-                icon = self._model.get_icon(coord)
-                icon.draw(self._display_surface)
+            animation_status = self._animation_statuses.get_status(coord)
+            if animation_status.icon_visible:
+                self._draw_icon_at_coord(coord)
+
+    def _draw_icon_at_coord(self, coord):
+        icon = self._model.get_icon(coord)
+        icon.draw(self._display_surface)
 
     def _draw_box_covers(self):
         for coord in coords.get_all_box_coords():
-            if not self._model.is_revealed(coord):
-                self._draw_box_cover(coord, settings.BOX_SIZE)
+            animation_status = self._animation_statuses.get_status(coord)
+            self._draw_box_cover(coord, animation_status.coverage)
 
     def _draw_box_cover(self, box_coords, coverage):
         if coverage > settings.BOX_SIZE:
@@ -73,7 +82,7 @@ class GraphicalView(object):
         topleft_corner = coords.top_left_coords_of_box(box_coords)
         if coverage > 0:
             rect_tuple = (topleft_corner.pixel_x, topleft_corner.pixel_y,
-                          settings.BOX_SIZE, settings.BOX_SIZE)
+                          coverage, settings.BOX_SIZE)
             pygame.draw.rect(self._display_surface, settings.BOX_COLOR,
                              rect_tuple)
 
@@ -116,5 +125,10 @@ class GraphicalView(object):
         if len(self._clicks) >= 3:
             self._clicks.pop(0)
         self._clicks.append(click_coords)
+        if click_coords.in_a_box:
+            animation_target = self._animation_statuses.get_status(
+                click_coords)
+            if not animation_target.being_animated:
+                animation_target.start_animation(-4, True)
 
 

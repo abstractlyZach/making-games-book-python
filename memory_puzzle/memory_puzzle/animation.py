@@ -1,5 +1,6 @@
 """Module for handling animation."""
 
+from . import coords
 from . import settings
 
 
@@ -7,7 +8,9 @@ class AnimationStatusTracker(object):
     """A container used for tracking animation statuses."""
     def __init__(self, starting_coverage=settings.BOX_SIZE):
         self._animation_statuses = [
-                [AnimationStatus() for y in range(settings.BOARD_HEIGHT)]
+                [AnimationStatus(coords.BoxCoords(x, y),
+                                 starting_coverage=starting_coverage)
+                 for y in range(settings.BOARD_HEIGHT)]
                 for x in range(settings.BOARD_WIDTH)
         ]
 
@@ -25,11 +28,16 @@ class AnimationStatusTracker(object):
 
 
 class AnimationStatus(object):
-    def __init__(self, starting_coverage=0):
+    def __init__(self, coord, starting_coverage=0):
         self._coverage = starting_coverage
         self._animation_rate = 0
         self._being_animated = False
         self._will_reverse = False
+        self._coord = coord
+
+    @property
+    def coord(self):
+        return self._coord
 
     @property
     def coverage(self):
@@ -42,6 +50,10 @@ class AnimationStatus(object):
     @property
     def being_animated(self):
         return self._being_animated
+
+    @property
+    def icon_visible(self):
+        return self._coverage < settings.BOX_SIZE
 
     def start_animation(self, animation_rate, will_reverse=False):
         self._animation_rate = animation_rate
