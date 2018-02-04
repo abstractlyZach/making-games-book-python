@@ -1,4 +1,5 @@
 import logging
+import random
 
 import pygame
 
@@ -7,6 +8,9 @@ from . import coords
 from . import constants
 from . import events
 from . import settings
+
+# size of groups to reveal for hints
+REVEAL_GROUPS = 10
 
 
 class GraphicalView(object):
@@ -17,6 +21,11 @@ class GraphicalView(object):
         self._is_initialized = False
         self._screen = None
         self._clicks = []
+        self._active_jobs = []
+
+    @property
+    def busy(self):
+        return len(self._active_jobs) > 0
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -25,15 +34,32 @@ class GraphicalView(object):
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
         elif isinstance(event, events.TickEvent):
+            self._handle_active_jobs()
             self._progress_animations()
             self.render_all()
         elif isinstance(event, events.ClickEvent):
-            self._handle_click(event.coords)
+            if self.busy:
+                pass
+            else:
+                self._handle_click(event.coords)
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()
 
+    def _handle_active_jobs(self):
+        if self._animation_statuses.any_animations_active():
+            return
+        else:
+            if len(self._active_jobs) > 0:
+                new_job = self._active_jobs.pop(0)
+                for coord in new_job:
+                    self._open_and_close_box(coord)
+
     def _do_new_game_animation(self):
-        pass
+        all_coords = coords.get_all_box_coords()
+        random.shuffle(all_coords)
+        for i in range(0, len(all_coords), REVEAL_GROUPS):
+            self._active_jobs.append(all_coords[i: i + REVEAL_GROUPS])
+
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
@@ -126,9 +152,11 @@ class GraphicalView(object):
             self._clicks.pop(0)
         self._clicks.append(click_coords)
         if click_coords.in_a_box:
-            animation_target = self._animation_statuses.get_status(
-                click_coords)
-            if not animation_target.being_animated:
-                animation_target.start_animation(-4, True)
+            self._open_and_close_box(click_coords)
+
+    def _open_and_close_box(self, coord):
+        animation_target = self._animation_statuses.get_status(coord)
+        if not animation_target.being_animated:
+            animation_target.start_animation(-4, True)
 
 
