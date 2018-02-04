@@ -24,9 +24,14 @@ class GraphicalView(object):
         self._clicks = []
         self._active_jobs = []
 
-    @property
-    def busy(self):
-        return len(self._active_jobs) > 0
+    def initialize(self):
+        """Set up the pygame graphical display and load graphical resources."""
+        pygame.init()
+        pygame.display.set_caption('Memory Game')
+        window_dimensions = (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
+        self._display_surface = pygame.display.set_mode(window_dimensions)
+        self._is_initialized = True
+        logging.info('View initialized.')
 
     def notify(self, event):
         if isinstance(event, events.TickEvent):
@@ -44,6 +49,10 @@ class GraphicalView(object):
             # ends the pygame graphical display
             pygame.quit()
 
+    @property
+    def busy(self):
+        return len(self._active_jobs) > 0
+
     def _handle_jobs(self):
         if not self._animation_statuses.any_animations_active():
             self._check_for_new_jobs()
@@ -57,21 +66,6 @@ class GraphicalView(object):
         new_job = self._active_jobs.pop(0)
         for coord in new_job:
             self._open_and_close_box(coord)
-
-    def _do_new_game_animation(self):
-        all_coords = coords.get_all_box_coords()
-        random.shuffle(all_coords)
-        for i in range(0, len(all_coords), REVEAL_GROUPS):
-            self._active_jobs.append(all_coords[i: i + REVEAL_GROUPS])
-
-    def initialize(self):
-        """Set up the pygame graphical display and load graphical resources."""
-        pygame.init()
-        pygame.display.set_caption('Memory Game')
-        window_dimensions = (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
-        self._display_surface = pygame.display.set_mode(window_dimensions)
-        self._is_initialized = True
-        logging.info('View initialized.')
 
     def _progress_animations(self):
         for animation in self._animation_statuses.get_active_animations():
@@ -160,4 +154,9 @@ class GraphicalView(object):
         if not animation_target.being_animated:
             animation_target.start_animation(-4, True)
 
+    def _do_new_game_animation(self):
+        all_coords = coords.get_all_box_coords()
+        random.shuffle(all_coords)
+        for i in range(0, len(all_coords), REVEAL_GROUPS):
+            self._active_jobs.append(all_coords[i: i + REVEAL_GROUPS])
 
