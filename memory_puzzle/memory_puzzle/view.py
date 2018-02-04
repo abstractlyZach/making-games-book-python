@@ -28,36 +28,40 @@ class GraphicalView(object):
         return len(self._active_jobs) > 0
 
     def notify(self, event):
-        if isinstance(event, events.QuitEvent):
-            # ends the pygame graphical display
-            pygame.quit()
-        elif isinstance(event, events.InitializeEvent):
-            self.initialize()
-        elif isinstance(event, events.TickEvent):
-            self._handle_active_jobs()
+        if isinstance(event, events.TickEvent):
+            self._handle_jobs()
             self._progress_animations()
             self.render_all()
         elif isinstance(event, events.ClickEvent):
-            if not self.busy:
+            if not self.busy: # ignore clicks if the view is busy
                 self._handle_click(event.coords)
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()
+        elif isinstance(event, events.InitializeEvent):
+            self.initialize()
+        elif isinstance(event, events.QuitEvent):
+            # ends the pygame graphical display
+            pygame.quit()
 
-    def _handle_active_jobs(self):
-        if self._animation_statuses.any_animations_active():
-            return
-        else:
-            if len(self._active_jobs) > 0:
-                new_job = self._active_jobs.pop(0)
-                for coord in new_job:
-                    self._open_and_close_box(coord)
+    def _handle_jobs(self):
+        if not self._animation_statuses.any_animations_active():
+            self._check_for_new_jobs()
+
+    def _check_for_new_jobs(self):
+        more_jobs_to_do = len(self._active_jobs) > 0
+        if more_jobs_to_do:
+            self._start_new_job()
+
+    def _start_new_job(self):
+        new_job = self._active_jobs.pop(0)
+        for coord in new_job:
+            self._open_and_close_box(coord)
 
     def _do_new_game_animation(self):
         all_coords = coords.get_all_box_coords()
         random.shuffle(all_coords)
         for i in range(0, len(all_coords), REVEAL_GROUPS):
             self._active_jobs.append(all_coords[i: i + REVEAL_GROUPS])
-
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
