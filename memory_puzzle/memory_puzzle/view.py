@@ -38,9 +38,7 @@ class GraphicalView(object):
             self._progress_animations()
             self.render_all()
         elif isinstance(event, events.ClickEvent):
-            if self.busy:
-                pass
-            else:
+            if not self.busy:
                 self._handle_click(event.coords)
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()
