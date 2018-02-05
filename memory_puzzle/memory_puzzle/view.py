@@ -45,8 +45,12 @@ class GraphicalView(object):
         elif isinstance(event, events.ClickEvent):
             if not self.busy: # ignore clicks if the view is busy
                 self._handle_click(event.coords)
+        elif isinstance(event, events.BoxOpenEvent):
+            self._open_box(event.coords)
+        elif isinstance(event, events.BoxCloseEvent):
+            self._close_box(event.coords)
         elif isinstance(event, events.NewGameEvent):
-            # self._do_new_game_animation()
+            self._do_new_game_animation()
             pass
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
@@ -100,8 +104,12 @@ class GraphicalView(object):
 
     def _draw_box_covers(self):
         for coord in coords.get_all_box_coords():
-            animation_status = self._animation_statuses.get_status(coord)
-            self._draw_box_cover(coord, animation_status.coverage)
+            if self._animation_statuses.any_animations_active():
+                animation_status = self._animation_statuses.get_status(coord)
+                self._draw_box_cover(coord, animation_status.coverage)
+            else:
+                if not self._model.is_revealed(coord):
+                    self._draw_box_cover(coord, settings.BOX_SIZE)
 
     def _draw_box_cover(self, box_coords, coverage):
         if coverage > settings.BOX_SIZE:
@@ -152,8 +160,6 @@ class GraphicalView(object):
         if len(self._clicks) >= 3:
             self._clicks.pop(0)
         self._clicks.append(click_coords)
-        if click_coords.in_a_box:
-            self._open_box(click_coords)
 
     def _open_and_close_box(self, coord):
         animation_target = self._animation_statuses.get_status(coord)
@@ -169,7 +175,6 @@ class GraphicalView(object):
         animation_target = self._animation_statuses.get_status(coord)
         if not animation_target.being_animated:
             animation_target.start_animation(4)
-
 
     def _do_new_game_animation(self):
         all_coords = coords.get_all_box_coords()

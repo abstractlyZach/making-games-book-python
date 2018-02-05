@@ -23,6 +23,10 @@ class Model(object):
             self._running = False
         elif isinstance(event, events.ClickEvent):
             if event.coords.in_a_box:
+                if self.is_revealed(event.coords):
+                    self._event_manager.post(events.BoxCloseEvent(event.coords))
+                else:
+                    self._event_manager.post(events.BoxOpenEvent(event.coords))
                 self._board.toggle_reveal(event.coords)
 
     def run(self):

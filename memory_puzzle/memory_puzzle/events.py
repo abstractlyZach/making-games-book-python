@@ -47,32 +47,43 @@ class KeyPressEvent(InputEvent):
         return self._key
 
 
-class ClickEvent(InputEvent):
+class PositionalEvent(Event):
+    """Superclass for any event that has a coord."""
     def __init__(self, position):
+        self._position = position
+
+    @property
+    def coords(self):
+        return self._position
+
+    def __str__(self):
+        return '{}: {}'.format(self._name, self._position)
+
+
+class ClickEvent(PositionalEvent, InputEvent):
+    def __init__(self, position):
+        super().__init__(position)
         self._name = 'Click Event'
-        self._position = position
 
-    @property
-    def coords(self):
-        return self._position
 
-    def __str__(self):
-        return '{}: {}'.format(self._name, self._position)
-
-class MouseMovementEvent(InputEvent):
+class MouseMovementEvent(PositionalEvent, InputEvent):
     def __init__(self, position):
+        super().__init__(position)
         self._name = 'Mouse Movement Event'
-        self._position = position
-
-    @property
-    def coords(self):
-        return self._position
-
-    def __str__(self):
-        return '{}: {}'.format(self._name, self._position)
 
 
 class NewGameEvent(Event):
     def __init__(self):
         self._name = 'New Game Event'
 
+class BoxOpenEvent(PositionalEvent):
+    """A request from the model to the view to animate a box opening."""
+    def __init__(self, position):
+        super().__init__(position)
+        self._name = 'Box Open Event'
+
+class BoxCloseEvent(PositionalEvent):
+    """A request from the model to the view to animate a box closing."""
+    def __init__(self, position):
+        super().__init__(position)
+        self._name = 'Box Close Event'
