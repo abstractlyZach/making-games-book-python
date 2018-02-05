@@ -25,6 +25,9 @@ class Controller(object):
         elif (event.type == pygame.MOUSEBUTTONUP):
             mouse_coords = coords.PixelCoords(event.pos[0], event.pos[1])
             event_to_post = events.ClickEvent(mouse_coords)
+        elif (event.type == pygame.MOUSEMOTION):
+            mouse_coords = coords.PixelCoords(event.pos[0], event.pos[1])
+            event_to_post = events.MouseMovementEvent(mouse_coords)
         else:
             return
         self._event_manager.post(event_to_post)

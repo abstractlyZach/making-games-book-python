@@ -59,6 +59,18 @@ class ClickEvent(InputEvent):
     def __str__(self):
         return '{}: {}'.format(self._name, self._position)
 
+class MouseMovementEvent(InputEvent):
+    def __init__(self, position):
+        self._name = 'Mouse Movement Event'
+        self._position = position
+
+    @property
+    def coords(self):
+        return self._position
+
+    def __str__(self):
+        return '{}: {}'.format(self._name, self._position)
+
 
 class NewGameEvent(Event):
     def __init__(self):

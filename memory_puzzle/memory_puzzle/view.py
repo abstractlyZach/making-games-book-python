@@ -32,6 +32,7 @@ class GraphicalView(object):
         window_dimensions = (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
         self._display_surface = pygame.display.set_mode(window_dimensions)
         self._is_initialized = True
+        self._mouse_position = coords.PixelCoords(0, 0)
         logging.info('View initialized.')
 
     def notify(self, event):
@@ -39,6 +40,8 @@ class GraphicalView(object):
             self._handle_jobs()
             self._progress_animations()
             self.render_all()
+        elif isinstance(event, events.MouseMovementEvent):
+            self._mouse_position = event.coords
         elif isinstance(event, events.ClickEvent):
             if not self.busy: # ignore clicks if the view is busy
                 self._handle_click(event.coords)
@@ -81,7 +84,7 @@ class GraphicalView(object):
         self._draw_visible_icons()
         self._draw_box_covers()
         self._draw_guidelines(constants.RED)
-        self._draw_highlight(coords.BoxCoords(0, 0))
+        self._try_to_draw_highlight(self._mouse_position)
         self._draw_click_markers()
         pygame.display.update()
 
