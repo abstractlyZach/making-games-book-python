@@ -1,4 +1,5 @@
 import logging
+import math
 import random
 
 import pygame
@@ -80,6 +81,7 @@ class GraphicalView(object):
         self._draw_visible_icons()
         self._draw_box_covers()
         self._draw_guidelines(constants.RED)
+        self._draw_highlight(coords.BoxCoords(0, 0))
         self._draw_click_markers()
         pygame.display.update()
 
@@ -171,4 +173,21 @@ class GraphicalView(object):
         random.shuffle(all_coords)
         for i in range(0, len(all_coords), REVEAL_GROUPS):
             self._active_jobs.append(all_coords[i: i + REVEAL_GROUPS])
+
+    def _try_to_draw_highlight(self, coord):
+        if coord.in_a_box:
+            self._draw_highlight(coord)
+
+    def _draw_highlight(self, coord):
+        top_left = coords.top_left_coords_of_box(coord)
+        highlight_thickness = math.floor(settings.GAP_SIZE / 2)
+        highlight_width = settings.BOX_SIZE + settings.GAP_SIZE
+        top = top_left.pixel_y - highlight_thickness
+        left = top_left.pixel_x - highlight_thickness
+        bounding_rect = (left, top, highlight_width, highlight_width)
+        pygame.draw.rect(self._display_surface, settings.HIGHLIGHT_COLOR,
+                         bounding_rect, highlight_thickness)
+        
+
+
 

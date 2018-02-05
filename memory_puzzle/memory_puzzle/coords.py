@@ -11,10 +11,10 @@ def get_all_box_coords():
             all_coords.append(BoxCoords(x, y))
     return all_coords
 
-def top_left_coords_of_box(coords):
-    left = (coords.box_x * (BOX_SIZE + GAP_SIZE)) + X_MARGIN + int(GAP_SIZE
-                                                                   / 2)
-    top = (coords.box_y * (BOX_SIZE + GAP_SIZE)) + Y_MARGIN + int(GAP_SIZE / 2)
+def top_left_coords_of_box(coord):
+    left = (coord.box_x * (BOX_SIZE + GAP_SIZE)) + X_MARGIN + int(GAP_SIZE
+                                                                  / 2)
+    top = (coord.box_y * (BOX_SIZE + GAP_SIZE)) + Y_MARGIN + int(GAP_SIZE / 2)
     return PixelCoords(left, top)
 
 
