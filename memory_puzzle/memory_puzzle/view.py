@@ -42,7 +42,8 @@ class GraphicalView(object):
             if not self.busy: # ignore clicks if the view is busy
                 self._handle_click(event.coords)
         elif isinstance(event, events.NewGameEvent):
-            self._do_new_game_animation()
+            # self._do_new_game_animation()
+            pass
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
         elif isinstance(event, events.QuitEvent):
@@ -147,12 +148,23 @@ class GraphicalView(object):
             self._clicks.pop(0)
         self._clicks.append(click_coords)
         if click_coords.in_a_box:
-            self._open_and_close_box(click_coords)
+            self._open_box(click_coords)
 
     def _open_and_close_box(self, coord):
         animation_target = self._animation_statuses.get_status(coord)
         if not animation_target.being_animated:
             animation_target.start_animation(-4, True)
+
+    def _open_box(self, coord):
+        animation_target = self._animation_statuses.get_status(coord)
+        if not animation_target.being_animated:
+            animation_target.start_animation(-4)
+
+    def _close_box(self, coord):
+        animation_target = self._animation_statuses.get_status(coord)
+        if not animation_target.being_animated:
+            animation_target.start_animation(4)
+
 
     def _do_new_game_animation(self):
         all_coords = coords.get_all_box_coords()
