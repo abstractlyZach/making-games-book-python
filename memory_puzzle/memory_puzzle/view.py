@@ -191,6 +191,3 @@ class GraphicalView(object):
         pygame.draw.rect(self._display_surface, settings.HIGHLIGHT_COLOR,
                          bounding_rect, highlight_thickness)
         
-
-
-
