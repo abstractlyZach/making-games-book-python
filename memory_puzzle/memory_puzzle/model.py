@@ -40,6 +40,9 @@ class Model(object):
                     self._first_selection = self._board.get_icon(coords)
                 else:
                     # check for match
+                    second_selection = self._board.get_icon(coords)
+                    if self._first_selection == second_selection:
+                        self._event_manager.post(events.Event())
                     self._first_selection = None
 
     def run(self):
