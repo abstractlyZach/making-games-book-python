@@ -50,7 +50,7 @@ class GraphicalView(object):
         elif isinstance(event, events.BoxCloseRequest):
             self._close_box(event.coords)
         elif isinstance(event, events.NewGameEvent):
-            self._do_new_game_animation()
+            # self._do_new_game_animation()
             pass
         elif isinstance(event, events.InitializeEvent):
             self.initialize()

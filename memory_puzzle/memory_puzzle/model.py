@@ -28,7 +28,8 @@ class Model(object):
     def _handle_click(self, coords):
         if coords.in_a_box:
             if self.is_revealed(coords):
-                pass
+                self._event_manager.post(events.BoxCloseRequest(coords))
+                self._board.cover(coords)
             else:
                 self._event_manager.post(events.BoxOpenRequest(coords))
                 self._board.reveal(coords)
