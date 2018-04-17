@@ -76,13 +76,13 @@ class NewGameEvent(Event):
     def __init__(self):
         self._name = 'New Game Event'
 
-class BoxOpenEvent(PositionalEvent):
+class BoxOpenRequest(PositionalEvent):
     """A request from the model to the view to animate a box opening."""
     def __init__(self, position):
         super().__init__(position)
         self._name = 'Box Open Event'
 
-class BoxCloseEvent(PositionalEvent):
+class BoxCloseRequest(PositionalEvent):
     """A request from the model to the view to animate a box closing."""
     def __init__(self, position):
         super().__init__(position)

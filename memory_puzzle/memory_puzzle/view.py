@@ -45,9 +45,9 @@ class GraphicalView(object):
         elif isinstance(event, events.ClickEvent):
             if not self.busy: # ignore clicks if the view is busy
                 self._handle_click(event.coords)
-        elif isinstance(event, events.BoxOpenEvent):
+        elif isinstance(event, events.BoxOpenRequest):
             self._open_box(event.coords)
-        elif isinstance(event, events.BoxCloseEvent):
+        elif isinstance(event, events.BoxCloseRequest):
             self._close_box(event.coords)
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()

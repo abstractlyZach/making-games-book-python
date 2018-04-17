@@ -30,7 +30,7 @@ class Model(object):
             if self.is_revealed(coords):
                 pass
             else:
-                self._event_manager.post(events.BoxOpenEvent(coords))
+                self._event_manager.post(events.BoxOpenRequest(coords))
                 self._board.reveal(coords)
                 if self._first_selection == None:
                     self._first_selection = self._board.get_icon(coords)
