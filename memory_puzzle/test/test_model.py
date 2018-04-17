@@ -25,5 +25,5 @@ def test_model_four_ticks_before_quit():
     tick_events = [event for event in event_manager.events
                    if isinstance(event, events.TickEvent)]
     assert len(tick_events) == 4
-    assert len(event_manager.events) == 6
+    assert len(event_manager.events) == 7
 
