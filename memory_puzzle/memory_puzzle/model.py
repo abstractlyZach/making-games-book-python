@@ -17,17 +17,26 @@ class Model(object):
                                   settings.BOARD_HEIGHT,
                                   constants.ALL_COLORS,
                                   constants.ALL_SHAPES)
+        self._first_selection = None
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
         elif isinstance(event, events.ClickEvent):
-            if event.coords.in_a_box:
-                if self.is_revealed(event.coords):
-                    self._event_manager.post(events.BoxCloseEvent(event.coords))
+            self._handle_click(event.coords)
+
+    def _handle_click(self, coords):
+        if coords.in_a_box:
+            if self.is_revealed(coords):
+                pass
+            else:
+                self._event_manager.post(events.BoxOpenEvent(coords))
+                self._board.reveal(coords)
+                if self._first_selection == None:
+                    self._first_selection = self._board.get_icon(coords)
                 else:
-                    self._event_manager.post(events.BoxOpenEvent(event.coords))
-                self._board.toggle_reveal(event.coords)
+                    # check for match
+                    self._first_selection = None
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
