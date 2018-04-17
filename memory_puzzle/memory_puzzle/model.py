@@ -33,16 +33,22 @@ class Model(object):
     def _handle_click(self, coords):
         if coords.in_a_box:
             if self.is_revealed(coords):
-                self._event_manager.post(events.BoxCloseRequest(coords))
+                pass
             else:
                 self._event_manager.post(events.BoxOpenRequest(coords))
                 if self._first_selection == None:
                     self._first_selection = self._board.get_icon(coords)
+                    self._close_first_selection_event = \
+                        events.BoxCloseRequest(coords)
                 else:
                     # check for match
                     second_selection = self._board.get_icon(coords)
                     if self._first_selection == second_selection:
                         self._event_manager.post(events.Event())
+                    else:
+                        self._event_manager.post(events.AnimationPause(1))
+                        self._event_manager.post(events.BoxCloseRequest(coords))
+                        self._event_manager.post(self._close_first_selection_event)
                     self._first_selection = None
 
     def run(self):

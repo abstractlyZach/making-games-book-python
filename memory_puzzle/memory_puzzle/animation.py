@@ -7,6 +7,7 @@ from . import settings
 class AnimationStatusTracker(object):
     """A container used for tracking animation statuses."""
     def __init__(self, starting_coverage=settings.BOX_SIZE):
+        self._paused = False
         self._animation_statuses = [
                 [AnimationStatus(coords.BoxCoords(x, y),
                                  starting_coverage=starting_coverage)
@@ -25,6 +26,17 @@ class AnimationStatusTracker(object):
 
     def any_animations_active(self):
         return len(self.get_active_animations()) > 0
+
+    @property
+    def animations_paused(self):
+        return self._paused
+
+    def pause_animations(self):
+        self._paused = True
+
+    def unpause_animations(self):
+        self._paused = False
+
 
 
 class AnimationStatus(object):

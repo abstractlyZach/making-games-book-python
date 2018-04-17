@@ -101,3 +101,12 @@ class BoxCloseConfirm(PositionalEvent):
     def __init__(self, position):
         super().__init__(position)
         self._name = 'Box Close Confirm'
+
+class AnimationPause(Event):
+    def __init__(self, seconds):
+        self._name = 'Animation Pause Event'
+        self._seconds = seconds
+
+    @property
+    def seconds(self):
+        return self._seconds

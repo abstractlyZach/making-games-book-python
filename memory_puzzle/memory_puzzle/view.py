@@ -25,6 +25,8 @@ class GraphicalView(object):
         self._display_surface = None
         self._clicks = []
         self._active_jobs = []
+        self._animation_request_queue = []
+        self._frames_left_until_unpause = 0
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
@@ -47,11 +49,13 @@ class GraphicalView(object):
             if not self.busy: # ignore clicks if the view is busy
                 self._handle_click(event.coords)
         elif isinstance(event, events.BoxOpenRequest):
-            self._handle_box_open_request(event)
+            self._animation_request_queue.append(event)
         elif isinstance(event, events.BoxCloseRequest):
-            self._handle_box_close_request(event)
+            self._animation_request_queue.append(event)
+        elif isinstance(event, events.AnimationPause):
+            self._animation_request_queue.append(event)
         elif isinstance(event, events.NewGameEvent):
-            # self._do_new_game_animation()
+            self._do_new_game_animation()
             pass
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
@@ -78,8 +82,39 @@ class GraphicalView(object):
             self._open_and_close_box(coord)
 
     def _progress_animations(self):
-        for animation in self._animation_statuses.get_active_animations():
-            animation.tick_animation()
+        if not self._animation_statuses.animations_paused:
+            self._handle_animation_queue()
+            for animation in self._animation_statuses.get_active_animations():
+                animation.tick_animation()
+        else:
+            self._frames_left_until_unpause -= 1
+            if self._frames_left_until_unpause <= 0:
+                self._animation_statuses.unpause_animations()
+
+    def _handle_animation_queue(self):
+        requests_to_put_back = []
+        while not len(self._animation_request_queue) <= 0:
+            request = self._animation_request_queue.pop(0)
+            if isinstance(request, events.AnimationPause):
+                if self._animation_statuses.any_animations_active():
+                    self._animation_request_queue.insert(0, request)
+                else:
+                    self._animation_statuses.pause_animations()
+                    self._frames_left_until_unpause = \
+                        request.seconds * settings.FPS
+                return
+            elif isinstance(request, events.PositionalEvent):
+                target_status = self._animation_statuses.get_status(
+                    request.coords)
+                if not target_status.being_animated:
+                    if isinstance(request, events.BoxCloseRequest):
+                        self._handle_box_close_request(request)
+                    elif isinstance(request, events.BoxOpenRequest):
+                        self._handle_box_open_request(request)
+                else:
+                    requests_to_put_back.append(request)
+        for request in requests_to_put_back:
+            self._animation_request_queue.append(request)
 
     def render_all(self):
         if not self._is_initialized:
