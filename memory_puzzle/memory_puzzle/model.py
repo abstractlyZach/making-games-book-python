@@ -28,6 +28,7 @@ class Model(object):
             self._board.reveal(event.coords)
         elif isinstance(event, events.BoxCloseConfirm):
             self._board.cover(event.coords)
+        self.check_win_condition()
 
 
     def _handle_click(self, coords):
@@ -67,3 +68,7 @@ class Model(object):
 
     def is_revealed(self, coord):
         return self._board.is_revealed(coord)
+
+    def check_win_condition(self):
+        if self._board.are_all_revealed():
+            print('you won!')
