@@ -53,7 +53,6 @@ class GraphicalView(object):
             if should_open :
                 self._open_box(event.coords)
                 self._event_manager.post(events.BoxOpenConfirm(event.coords))
-
         elif isinstance(event, events.BoxCloseRequest):
             current_status = self._animation_statuses.get_status(event.coords)
             should_close = not current_status.being_animated
