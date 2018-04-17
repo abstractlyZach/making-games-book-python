@@ -7,8 +7,9 @@ def test_identical_icons_match():
     for shape in constants.ALL_SHAPES:
         for color in constants.ALL_COLORS:
             random_coords = coords.BoxCoords(1, 2)
-            current_icon = icon.create_icon(shape, color, random_coords)
-            assert current_icon == current_icon
+            first_icon = icon.create_icon(shape, color, random_coords)
+            second_icon = icon.create_icon(shape, color, random_coords)
+            assert first_icon == second_icon
 
 def test_different_icons_dont_match():
     random_coords = coords.BoxCoords(5, 7)

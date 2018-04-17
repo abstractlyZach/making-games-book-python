@@ -29,6 +29,19 @@ class Icon(object):
         self._calculate_box_left()
         self._calculate_box_top()
 
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        format_string = '{} {} at {}'
+        return format_string.format(self._color,
+                                    self.__class__.__name__,
+                                    self._coords)
+
+    def __eq__(self, other):
+        return self.__class__ == other.__class__ \
+               and self._color == other._color
+
     def _calculate_box_top(self):
         container_size = settings.BOX_SIZE + settings.GAP_SIZE
         container_distance_from_margin = self._coords.box_y * container_size
