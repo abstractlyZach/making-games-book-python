@@ -18,6 +18,7 @@ class Model(object):
                                   constants.ALL_COLORS,
                                   constants.ALL_SHAPES)
         self._first_selection = None
+        self._won = False
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -28,7 +29,11 @@ class Model(object):
             self._board.reveal(event.coords)
         elif isinstance(event, events.BoxCloseConfirm):
             self._board.cover(event.coords)
-        self.check_win_condition()
+        elif isinstance(event, events.GameOverEvent):
+            self._handle_game_over()
+
+        if not self._won:
+            self.check_win_condition()
 
 
     def _handle_click(self, coords):
@@ -52,6 +57,9 @@ class Model(object):
                         self._event_manager.post(self._close_first_selection_event)
                     self._first_selection = None
 
+    def _handle_game_over(self):
+        pass
+
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
         each loop."""
@@ -72,3 +80,4 @@ class Model(object):
     def check_win_condition(self):
         if self._board.are_all_revealed():
             print('you won!')
+            self._won = True

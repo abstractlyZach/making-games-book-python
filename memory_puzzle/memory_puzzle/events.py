@@ -110,3 +110,7 @@ class AnimationPause(Event):
     @property
     def seconds(self):
         return self._seconds
+
+class GameOverEvent(Event):
+    def __init__(self):
+        self._name = 'Game Over Event'

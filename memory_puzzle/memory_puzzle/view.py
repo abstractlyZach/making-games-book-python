@@ -57,6 +57,8 @@ class GraphicalView(object):
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()
             pass
+        elif isinstance(events, events.GameOverEvent):
+            self._handle_game_over()
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
         elif isinstance(event, events.QuitEvent):
@@ -247,4 +249,6 @@ class GraphicalView(object):
         bounding_rect = (left, top, highlight_width, highlight_width)
         pygame.draw.rect(self._display_surface, settings.HIGHLIGHT_COLOR,
                          bounding_rect, highlight_thickness)
-        
+
+    def _handle_game_over(self):
+        pass
