@@ -87,3 +87,17 @@ class BoxCloseRequest(PositionalEvent):
     def __init__(self, position):
         super().__init__(position)
         self._name = 'Box Close Event'
+
+class BoxOpenConfirm(PositionalEvent):
+    """A confirmation from the view to the model to confirm that a box has
+    been opened."""
+    def __init__(self, position):
+        super().__init__(position)
+        self._name = 'Box Open Confirm'
+
+class BoxCloseConfirm(PositionalEvent):
+    """A confirmation from the view to the model to confirm that a box has
+    been closed."""
+    def __init__(self, position):
+        super().__init__(position)
+        self._name = 'Box Close Confirm'

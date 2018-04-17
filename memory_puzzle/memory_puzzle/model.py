@@ -24,15 +24,18 @@ class Model(object):
             self._running = False
         elif isinstance(event, events.ClickEvent):
             self._handle_click(event.coords)
+        elif isinstance(event, events.BoxOpenConfirm):
+            self._board.reveal(event.coords)
+        elif isinstance(event, events.BoxCloseConfirm):
+            self._board.cover(event.coords)
+
 
     def _handle_click(self, coords):
         if coords.in_a_box:
             if self.is_revealed(coords):
                 self._event_manager.post(events.BoxCloseRequest(coords))
-                self._board.cover(coords)
             else:
                 self._event_manager.post(events.BoxOpenRequest(coords))
-                self._board.reveal(coords)
                 if self._first_selection == None:
                     self._first_selection = self._board.get_icon(coords)
                 else:

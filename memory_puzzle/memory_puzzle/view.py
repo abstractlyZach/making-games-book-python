@@ -17,6 +17,7 @@ REVEAL_GROUPS = 10
 class GraphicalView(object):
     """Draws the model's state to the screen."""
     def __init__(self, event_manager, model):
+        self._event_manager = event_manager
         event_manager.register_listener(self)
         self._model = model
         self._animation_statuses = animation.AnimationStatusTracker()
@@ -46,9 +47,20 @@ class GraphicalView(object):
             if not self.busy: # ignore clicks if the view is busy
                 self._handle_click(event.coords)
         elif isinstance(event, events.BoxOpenRequest):
-            self._open_box(event.coords)
+            current_status = self._animation_statuses.get_status(event.coords)
+            should_open  = not current_status.being_animated
+            should_open  = should_open  and not current_status.icon_visible
+            if should_open :
+                self._open_box(event.coords)
+                self._event_manager.post(events.BoxOpenConfirm(event.coords))
+
         elif isinstance(event, events.BoxCloseRequest):
-            self._close_box(event.coords)
+            current_status = self._animation_statuses.get_status(event.coords)
+            should_close = not current_status.being_animated
+            should_close= should_close and current_status.icon_visible
+            if should_close:
+                self._close_box(event.coords)
+                self._event_manager.post(events.BoxCloseConfirm(event.coords))
         elif isinstance(event, events.NewGameEvent):
             # self._do_new_game_animation()
             pass
