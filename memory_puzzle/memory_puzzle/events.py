@@ -76,6 +76,10 @@ class NewGameEvent(Event):
     def __init__(self):
         self._name = 'New Game Event'
 
+class MatchEvent(Event):
+    def __init__(self, icon):
+        self._name = 'Match Event: {}'.format(icon.get_name())
+
 class BoxOpenRequest(PositionalEvent):
     """A request from the model to the view to animate a box opening."""
     def __init__(self, position):

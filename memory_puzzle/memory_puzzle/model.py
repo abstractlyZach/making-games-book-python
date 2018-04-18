@@ -50,7 +50,8 @@ class Model(object):
                     # check for match
                     second_selection = self._board.get_icon(coords)
                     if self._first_selection == second_selection:
-                        self._event_manager.post(events.Event())
+                        self._event_manager.post(
+                            events.MatchEvent(second_selection))
                     else:
                         self._event_manager.post(events.AnimationPause(.5))
                         self._event_manager.post(events.BoxCloseRequest(coords))
