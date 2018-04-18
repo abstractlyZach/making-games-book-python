@@ -52,7 +52,7 @@ class Model(object):
                     if self._first_selection == second_selection:
                         self._event_manager.post(events.Event())
                     else:
-                        self._event_manager.post(events.AnimationPause(1))
+                        self._event_manager.post(events.AnimationPause(.5))
                         self._event_manager.post(events.BoxCloseRequest(coords))
                         self._event_manager.post(self._close_first_selection_event)
                     self._first_selection = None
