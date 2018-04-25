@@ -53,7 +53,6 @@ class GraphicalView(object):
             self._animation_request_queue.append(event)
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()
-            pass
         elif isinstance(events, events.GameOverEvent):
             self._handle_game_over()
         elif isinstance(event, events.InitializeEvent):
