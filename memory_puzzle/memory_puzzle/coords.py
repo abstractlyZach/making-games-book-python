@@ -104,8 +104,17 @@ class PixelCoords(object):
         return (self.box_x is not None) and (self.box_y is not None)
 
     def __str__(self):
-        return '{}: ({}, {})'.format(self.__class__.__name__, self._pixel_x,
-                                     self._pixel_y)
+        # return '{}: ({}, {})'.format(self.__class__.__name__, self._pixel_x,
+        #                              self._pixel_y)
+        return '{}: {}'.format(self.__class__.__name__, self.box_coords_str)
+
+    @property
+    def box_coords_str(self):
+        if self.in_a_box:
+            return '({}, {})'.format(self.box_x, self.box_y)
+        else:
+            return 'Not in a box.'
+
 
 
 class BoxCoords(object):
@@ -120,3 +129,6 @@ class BoxCoords(object):
     @property
     def box_y(self):
         return self._y
+
+    def __str__(self):
+        return '{}: ({}, {})'.format(self.__class__.__name__, self._x, self._y)
