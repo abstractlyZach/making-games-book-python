@@ -24,7 +24,6 @@ class GraphicalView(object):
         self._is_initialized = False
         self._display_surface = None
         self._clicks = []
-        self._active_jobs = []
         self._animation_request_queue = []
         self._frames_left_until_unpause = 0
 
