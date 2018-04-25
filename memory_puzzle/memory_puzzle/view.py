@@ -40,8 +40,7 @@ class GraphicalView(object):
 
     def notify(self, event):
         if isinstance(event, events.TickEvent):
-            self._progress_animations()
-            self.render_all()
+            self._handle_tick_event()
         elif isinstance(event, events.MouseMovementEvent):
             self._mouse_position = event.coords
         # elif isinstance(event, events.ClickEvent):
@@ -64,15 +63,22 @@ class GraphicalView(object):
             # ends the pygame graphical display
             pygame.quit()
 
-    def _progress_animations(self):
-        if not self._animation_statuses.animations_paused:
-            self._handle_animation_queue()
-            for animation in self._animation_statuses.get_active_animations():
-                animation.tick_animation()
+    def _handle_tick_event(self):
+        if self._animation_statuses.animations_paused:
+            self._handle_pause_tick()
         else:
-            self._frames_left_until_unpause -= 1
-            if self._frames_left_until_unpause <= 0:
-                self._animation_statuses.unpause_animations()
+            self._progress_animations()
+        self.render_all()
+
+    def _handle_pause_tick(self):
+        self._frames_left_until_unpause -= 1
+        if self._frames_left_until_unpause <= 0:
+            self._animation_statuses.unpause_animations()
+
+    def _progress_animations(self):
+        self._handle_animation_queue()
+        for animation in self._animation_statuses.get_active_animations():
+            animation.tick_animation()
 
     def _handle_animation_queue(self):
         requests_to_put_back = []
