@@ -55,11 +55,9 @@ class Model(object):
                 self._first_selection = None
 
     def _handle_click(self, coords):
-        if coords.in_a_box:
-            if self.is_revealed(coords):
-                pass
-            else:
-                self._event_manager.post(events.BoxOpenRequest(coords))
+        openable = coords.in_a_box and not self.is_revealed(coords)
+        if openable:
+            self._event_manager.post(events.BoxOpenRequest(coords))
 
     def _handle_game_over(self):
         pass
