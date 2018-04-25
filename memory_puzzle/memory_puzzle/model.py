@@ -43,10 +43,13 @@ class Model(object):
             else:
                 self._event_manager.post(events.BoxOpenRequest(coords))
                 if self._first_selection == None:
+                    self._first_coord = coords
                     self._first_selection = self._board.get_icon(coords)
                     self._close_first_selection_event = \
                         events.BoxCloseRequest(coords)
                 else:
+                    if self._first_coord == coords:
+                        return
                     # check for match
                     second_selection = self._board.get_icon(coords)
                     if self._first_selection == second_selection:
