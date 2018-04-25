@@ -45,11 +45,7 @@ class GraphicalView(object):
             self._mouse_position = event.coords
         # elif isinstance(event, events.ClickEvent):
         #     self._handle_click(event.coords)
-        elif isinstance(event, events.BoxOpenRequest):
-            self._animation_request_queue.append(event)
-        elif isinstance(event, events.BoxCloseRequest):
-            self._animation_request_queue.append(event)
-        elif isinstance(event, events.AnimationPause):
+        elif isinstance(event, events.AnimationRequest):
             self._animation_request_queue.append(event)
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()

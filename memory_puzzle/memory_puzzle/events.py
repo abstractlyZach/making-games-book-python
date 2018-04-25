@@ -80,19 +80,24 @@ class MatchEvent(Event):
     def __init__(self, icon):
         self._name = 'Match Event: {}'.format(icon.get_name())
 
-class BoxOpenAndCloseRequest(PositionalEvent):
+class AnimationRequest(Event):
+    """Superclass for any animation requests that get made to the view."""
+    pass
+
+
+class BoxOpenAndCloseRequest(PositionalEvent, AnimationRequest):
     """A request to the view to animate a box opening and closing."""
     def __init__(self, position):
         super().__init__(position)
         self._name = 'Box Open and Close Event'
 
-class BoxOpenRequest(PositionalEvent):
+class BoxOpenRequest(PositionalEvent, AnimationRequest):
     """A request from the model to the view to animate a box opening."""
     def __init__(self, position):
         super().__init__(position)
         self._name = 'Box Open Request'
 
-class BoxCloseRequest(PositionalEvent):
+class BoxCloseRequest(PositionalEvent, AnimationRequest):
     """A request from the model to the view to animate a box closing."""
     def __init__(self, position):
         super().__init__(position)
@@ -112,7 +117,7 @@ class BoxCloseConfirm(PositionalEvent):
         super().__init__(position)
         self._name = 'Box Close Confirm'
 
-class AnimationPause(Event):
+class AnimationPause(AnimationRequest):
     def __init__(self, seconds):
         self._name = 'Animation Pause Event'
         self._seconds = seconds
