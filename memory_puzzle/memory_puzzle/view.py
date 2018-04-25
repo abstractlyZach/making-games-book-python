@@ -60,6 +60,7 @@ class GraphicalView(object):
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
         elif isinstance(event, events.QuitEvent):
+            self._is_initialized = False
             # ends the pygame graphical display
             pygame.quit()
 
