@@ -125,9 +125,9 @@ class GraphicalView(object):
         self._display_surface.fill(settings.BG_COLOR)
         self._draw_visible_icons()
         self._draw_box_covers()
-        self._draw_guidelines(constants.RED)
+        # self._draw_guidelines(constants.RED)
         self._try_to_draw_highlight(self._mouse_position)
-        self._draw_click_markers()
+        # self._draw_click_markers()
         pygame.display.update()
 
     def _draw_visible_icons(self):
