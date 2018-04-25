@@ -38,7 +38,6 @@ class AnimationStatusTracker(object):
         self._paused = False
 
 
-
 class AnimationStatus(object):
     def __init__(self, coord, starting_coverage=0):
         self._coverage = starting_coverage
