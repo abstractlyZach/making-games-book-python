@@ -18,7 +18,6 @@ class Model(object):
                                   constants.ALL_COLORS,
                                   constants.ALL_SHAPES)
         self._first_selection = None
-        self._won = False
 
     def notify(self, event):
         """Handle incoming events."""
@@ -33,8 +32,7 @@ class Model(object):
         elif isinstance(event, events.GameOverEvent):
             self._handle_game_over()
 
-        if not self._won:
-            self.check_win_condition()
+        self.check_win_condition()
 
     def _handle_selection(self, coords):
         """Handles a box being selected."""
@@ -104,5 +102,4 @@ class Model(object):
     def check_win_condition(self):
         """Check to see if the player has won."""
         if self._board.are_all_revealed():
-            print('you won!')
-            self._won = True
+            self._event_manager.post(events.GameOverEvent())
