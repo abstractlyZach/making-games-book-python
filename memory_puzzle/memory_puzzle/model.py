@@ -41,18 +41,28 @@ class Model(object):
             self._first_selection = coords
             self._close_first_selection_event = events.BoxCloseRequest(coords)
         else:
-            if coords == self._first_selection:
-                pass
+            self._handle_second_selection(coords)
+
+    def _handle_second_selection(self, coords):
+        if coords != self._first_selection:
+            self._compare_selections(coords)
+            self._first_selection = None
+
+    def _compare_selections(self, second_selection):
+            first_icon = self._board.get_icon(self._first_selection)
+            second_icon = self._board.get_icon(second_selection)
+            if first_icon == second_icon:
+                self._handle_match(first_icon)
             else:
-                first_icon = self._board.get_icon(self._first_selection)
-                second_icon = self._board.get_icon(coords)
-                if first_icon == second_icon:
-                    self._event_manager.post(events.MatchEvent(first_icon))
-                else:
-                    self._event_manager.post(events.AnimationPause(.5))
-                    self._event_manager.post(events.BoxCloseRequest(coords))
-                    self._event_manager.post(self._close_first_selection_event)
-                self._first_selection = None
+                self._handle_no_match(second_selection)
+
+    def _handle_match(self, icon):
+        self._event_manager.post(events.MatchEvent(icon))
+
+    def _handle_no_match(self, second_coords):
+        self._event_manager.post(events.AnimationPause(.5))
+        self._event_manager.post(events.BoxCloseRequest(second_coords))
+        self._event_manager.post(self._close_first_selection_event)
 
     def _handle_click(self, coords):
         openable = coords.in_a_box and not self.is_revealed(coords)
