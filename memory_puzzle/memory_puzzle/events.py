@@ -80,17 +80,23 @@ class MatchEvent(Event):
     def __init__(self, icon):
         self._name = 'Match Event: {}'.format(icon.get_name())
 
+class BoxOpenAndCloseRequest(PositionalEvent):
+    """A request to the view to animate a box opening and closing."""
+    def __init__(self, position):
+        super().__init__(position)
+        self._name = 'Box Open and Close Event'
+
 class BoxOpenRequest(PositionalEvent):
     """A request from the model to the view to animate a box opening."""
     def __init__(self, position):
         super().__init__(position)
-        self._name = 'Box Open Event'
+        self._name = 'Box Open Request'
 
 class BoxCloseRequest(PositionalEvent):
     """A request from the model to the view to animate a box closing."""
     def __init__(self, position):
         super().__init__(position)
-        self._name = 'Box Close Event'
+        self._name = 'Box Close Request'
 
 class BoxOpenConfirm(PositionalEvent):
     """A confirmation from the view to the model to confirm that a box has

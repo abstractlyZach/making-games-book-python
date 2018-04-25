@@ -40,14 +40,12 @@ class GraphicalView(object):
 
     def notify(self, event):
         if isinstance(event, events.TickEvent):
-            self._handle_jobs()
             self._progress_animations()
             self.render_all()
         elif isinstance(event, events.MouseMovementEvent):
             self._mouse_position = event.coords
-        elif isinstance(event, events.ClickEvent):
-            if not self.busy: # ignore clicks if the view is busy
-                self._handle_click(event.coords)
+        # elif isinstance(event, events.ClickEvent):
+        #     self._handle_click(event.coords)
         elif isinstance(event, events.BoxOpenRequest):
             self._animation_request_queue.append(event)
         elif isinstance(event, events.BoxCloseRequest):
@@ -64,24 +62,6 @@ class GraphicalView(object):
         elif isinstance(event, events.QuitEvent):
             # ends the pygame graphical display
             pygame.quit()
-
-    @property
-    def busy(self):
-        return len(self._active_jobs) > 0
-
-    def _handle_jobs(self):
-        if not self._animation_statuses.any_animations_active():
-            self._check_for_new_jobs()
-
-    def _check_for_new_jobs(self):
-        more_jobs_to_do = len(self._active_jobs) > 0
-        if more_jobs_to_do:
-            self._start_new_job()
-
-    def _start_new_job(self):
-        new_job = self._active_jobs.pop(0)
-        for coord in new_job:
-            self._open_and_close_box(coord)
 
     def _progress_animations(self):
         if not self._animation_statuses.animations_paused:
@@ -113,6 +93,8 @@ class GraphicalView(object):
                         self._handle_box_close_request(request)
                     elif isinstance(request, events.BoxOpenRequest):
                         self._handle_box_open_request(request)
+                    elif isinstance(request, events.BoxOpenAndCloseRequest):
+                        self._handle_box_open_and_close_request(request)
                 else:
                     requests_to_put_back.append(request)
         for request in requests_to_put_back:
@@ -199,6 +181,13 @@ class GraphicalView(object):
             self._clicks.pop(0)
         self._clicks.append(click_coords)
 
+    def _handle_box_open_and_close_request(self, event):
+        current_status = self._animation_statuses.get_status(event.coords)
+        should_open = not current_status.being_animated
+        should_open = should_open and not current_status.icon_visible
+        if should_open:
+            self._open_and_close_box(event.coords)
+
     def _handle_box_open_request(self, event):
         current_status = self._animation_statuses.get_status(event.coords)
         should_open = not current_status.being_animated
@@ -234,7 +223,10 @@ class GraphicalView(object):
         all_coords = coords.get_all_box_coords()
         random.shuffle(all_coords)
         for i in range(0, len(all_coords), REVEAL_GROUPS):
-            self._active_jobs.append(all_coords[i: i + REVEAL_GROUPS])
+            for coord in all_coords[i: i + REVEAL_GROUPS]:
+                self._animation_request_queue.append(
+                    events.BoxOpenAndCloseRequest(coord))
+            self._animation_request_queue.append(events.AnimationPause(0))
 
     def _try_to_draw_highlight(self, coord):
         if coord.in_a_box:
