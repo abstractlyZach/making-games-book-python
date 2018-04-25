@@ -30,3 +30,4 @@ BG_COLOR = constants.NAVYBLUE
 LIGHT_BG_COLOR = constants.GRAY
 BOX_COLOR = constants.WHITE
 HIGHLIGHT_COLOR = constants.BLUE
+VISUAL_DEBUG_MODE = False

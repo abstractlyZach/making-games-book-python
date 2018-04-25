@@ -42,8 +42,8 @@ class GraphicalView(object):
             self._handle_tick_event()
         elif isinstance(event, events.MouseMovementEvent):
             self._mouse_position = event.coords
-        # elif isinstance(event, events.ClickEvent):
-        #     self._handle_click(event.coords)
+        elif isinstance(event, events.ClickEvent):
+            self._handle_click(event.coords)
         elif isinstance(event, events.AnimationRequest):
             self._animation_request_queue.append(event)
         elif isinstance(event, events.NewGameEvent):
@@ -114,9 +114,10 @@ class GraphicalView(object):
         self._display_surface.fill(settings.BG_COLOR)
         self._draw_visible_icons()
         self._draw_box_covers()
-        # self._draw_guidelines(constants.RED)
         self._try_to_draw_highlight(self._mouse_position)
-        # self._draw_click_markers()
+        if settings.VISUAL_DEBUG_MODE:
+            self._draw_guidelines(constants.RED)
+            self._draw_click_markers()
         pygame.display.update()
 
     def _draw_visible_icons(self):
