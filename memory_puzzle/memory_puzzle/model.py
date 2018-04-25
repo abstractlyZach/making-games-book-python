@@ -26,7 +26,7 @@ class Model(object):
         elif isinstance(event, events.ClickEvent):
             self._handle_click(event.coords)
         elif isinstance(event, events.BoxOpenConfirm):
-            self._board.reveal(event.coords)
+            self._handle_selection(event.coords)
         elif isinstance(event, events.BoxCloseConfirm):
             self._board.cover(event.coords)
         elif isinstance(event, events.GameOverEvent):
@@ -35,6 +35,24 @@ class Model(object):
         if not self._won:
             self.check_win_condition()
 
+    def _handle_selection(self, coords):
+        self._board.reveal(coords)
+        if self._first_selection == None:
+            self._first_selection = coords
+            self._close_first_selection_event = events.BoxCloseRequest(coords)
+        else:
+            if coords == self._first_selection:
+                pass
+            else:
+                first_icon = self._board.get_icon(self._first_selection)
+                second_icon = self._board.get_icon(coords)
+                if first_icon == second_icon:
+                    self._event_manager.post(events.MatchEvent(first_icon))
+                else:
+                    self._event_manager.post(events.AnimationPause(.5))
+                    self._event_manager.post(events.BoxCloseRequest(coords))
+                    self._event_manager.post(self._close_first_selection_event)
+                self._first_selection = None
 
     def _handle_click(self, coords):
         if coords.in_a_box:
@@ -42,24 +60,6 @@ class Model(object):
                 pass
             else:
                 self._event_manager.post(events.BoxOpenRequest(coords))
-                if self._first_selection == None:
-                    self._first_coord = coords
-                    self._first_selection = self._board.get_icon(coords)
-                    self._close_first_selection_event = \
-                        events.BoxCloseRequest(coords)
-                else:
-                    if self._first_coord == coords:
-                        return
-                    # check for match
-                    second_selection = self._board.get_icon(coords)
-                    if self._first_selection == second_selection:
-                        self._event_manager.post(
-                            events.MatchEvent(second_selection))
-                    else:
-                        self._event_manager.post(events.AnimationPause(.5))
-                        self._event_manager.post(events.BoxCloseRequest(coords))
-                        self._event_manager.post(self._close_first_selection_event)
-                    self._first_selection = None
 
     def _handle_game_over(self):
         pass
