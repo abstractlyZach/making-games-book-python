@@ -75,21 +75,13 @@ class GraphicalView(object):
             animation.tick_animation()
 
     def _handle_animation_queue(self):
-        requests_to_put_back = []
         while not len(self._animation_request_queue) <= 0:
             request = self._animation_request_queue.pop(0)
             if isinstance(request, events.AnimationPause):
                 self._handle_pause_request(request)
                 return
             elif isinstance(request, events.PositionalEvent):
-                target_status = self._animation_statuses.get_status(
-                    request.coords)
-                if not target_status.being_animated:
-                    self._handle_box_animation_request(request)
-                else:
-                    requests_to_put_back.append(request)
-        for request in requests_to_put_back:
-            self._animation_request_queue.append(request)
+                self._handle_box_animation_request(request)
 
     def _handle_pause_request(self, request):
         if self._animation_statuses.any_animations_active():
