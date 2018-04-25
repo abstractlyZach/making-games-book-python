@@ -1,3 +1,5 @@
-# MVC Skeleton
+# Memory Game
 
-I can clone this to get a skeleton for any MVC project I start in python.
+Click a box to reveal what's hiding behind! Click two boxes, and if they match, they stay open. Win by finding all the matches on the board!
+
+To run this, install the requirements and then use `python main.py`
