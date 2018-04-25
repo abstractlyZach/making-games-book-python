@@ -80,27 +80,33 @@ class GraphicalView(object):
         while not len(self._animation_request_queue) <= 0:
             request = self._animation_request_queue.pop(0)
             if isinstance(request, events.AnimationPause):
-                if self._animation_statuses.any_animations_active():
-                    self._animation_request_queue.insert(0, request)
-                else:
-                    self._animation_statuses.pause_animations()
-                    self._frames_left_until_unpause = \
-                        request.seconds * settings.FPS
+                self._handle_pause_request(request)
                 return
             elif isinstance(request, events.PositionalEvent):
                 target_status = self._animation_statuses.get_status(
                     request.coords)
                 if not target_status.being_animated:
-                    if isinstance(request, events.BoxCloseRequest):
-                        self._handle_box_close_request(request)
-                    elif isinstance(request, events.BoxOpenRequest):
-                        self._handle_box_open_request(request)
-                    elif isinstance(request, events.BoxOpenAndCloseRequest):
-                        self._handle_box_open_and_close_request(request)
+                    self._handle_box_animation_request(request)
                 else:
                     requests_to_put_back.append(request)
         for request in requests_to_put_back:
             self._animation_request_queue.append(request)
+
+    def _handle_pause_request(self, request):
+        if self._animation_statuses.any_animations_active():
+            self._animation_request_queue.insert(0, request)
+        else:
+            self._animation_statuses.pause_animations()
+            self._frames_left_until_unpause = \
+                request.seconds * settings.FPS
+
+    def _handle_box_animation_request(self, request):
+        if isinstance(request, events.BoxCloseRequest):
+            self._handle_box_close_request(request)
+        elif isinstance(request, events.BoxOpenRequest):
+            self._handle_box_open_request(request)
+        elif isinstance(request, events.BoxOpenAndCloseRequest):
+            self._handle_box_open_and_close_request(request)
 
     def render_all(self):
         if not self._is_initialized:
