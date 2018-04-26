@@ -26,6 +26,7 @@ class GraphicalView(object):
         self._clicks = []
         self._animation_request_queue = []
         self._frames_left_until_unpause = 0
+        self._background_color = settings.BG_COLOR
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
@@ -49,7 +50,7 @@ class GraphicalView(object):
             self._animation_request_queue.append(event)
         elif isinstance(event, events.NewGameEvent):
             self._do_new_game_animation()
-        elif isinstance(events, events.GameOverEvent):
+        elif isinstance(event, events.GameOverEvent):
             self._handle_game_over()
         elif isinstance(event, events.InitializeEvent):
             self.initialize()
@@ -113,7 +114,7 @@ class GraphicalView(object):
         if not self._is_initialized:
             return
         # draw stuff
-        self._display_surface.fill(settings.BG_COLOR)
+        self._display_surface.fill(self._background_color)
         self._draw_visible_icons()
         self._draw_box_covers()
         self._try_to_draw_highlight(self._mouse_position)
@@ -276,4 +277,18 @@ class GraphicalView(object):
 
     def _handle_game_over(self):
         """Handle the game over event."""
-        pass
+        self._do_game_over_animation()
+        self._event_manager.post(events.NewGameEvent())
+
+    def _do_game_over_animation(self):
+        """Animate the board to celebrate victory."""
+        color1 = settings.LIGHT_BG_COLOR
+        color2 = settings.BG_COLOR
+        self._animation_statuses = animation.AnimationStatusTracker()
+        for i in range(13):
+            color1, color2 = color2, color1
+            self._background_color = color1
+            self.render_all()
+            pygame.time.wait(300)
+        self._background_color = settings.BG_COLOR
+

@@ -27,12 +27,11 @@ class Model(object):
             self._handle_click(event.coords)
         elif isinstance(event, events.BoxOpenConfirm):
             self._handle_selection(event.coords)
+            self.check_win_condition()
         elif isinstance(event, events.BoxCloseConfirm):
             self._board.cover(event.coords)
         elif isinstance(event, events.GameOverEvent):
             self._handle_game_over()
-
-        self.check_win_condition()
 
     def _handle_selection(self, coords):
         """Handles a box being selected."""
@@ -102,4 +101,9 @@ class Model(object):
     def check_win_condition(self):
         """Check to see if the player has won."""
         if self._board.are_all_revealed():
+            self._board = board.Board(settings.BOARD_WIDTH,
+                                      settings.BOARD_HEIGHT,
+                                      constants.ALL_COLORS,
+                                      constants.ALL_SHAPES)
             self._event_manager.post(events.GameOverEvent())
+
