@@ -1,5 +1,8 @@
 import pygame
 
+from . import settings
+from . import coords
+
 from slide_puzzle import events
 
 
@@ -9,9 +12,7 @@ class GraphicalView(object):
         event_manager.register_listener(self)
         self._model = model
         self._is_initialized = False
-        self._screen = None
-        self._small_font = None
-        self._text = 'The View is drawing on your screen!'
+        self._display_surface = None
         self._starting_new_word = False
 
     def notify(self, event):
@@ -22,52 +23,56 @@ class GraphicalView(object):
             self.initialize()
         elif isinstance(event, events.TickEvent):
             self.render_all()
-        elif isinstance(event, events.KeyPressEvent):
-            self._handle_keypress(event)
-
-    def _handle_keypress(self, event):
-        key_text = pygame.key.name(event.key)
-        if len(key_text) == 1:
-            self._update_text_with_char_input(key_text)
-        else:
-            self._handle_non_alphanum_keypress(key_text)
-
-    def _update_text_with_char_input(self, new_char):
-        if self._starting_new_word:
-            self._text = new_char
-            self._starting_new_word = False
-        else:
-            self._text += new_char
-
-    def _handle_non_alphanum_keypress(self, key_text):
-        if key_text == 'return':
-            self._starting_new_word = True
-        elif key_text == 'space':
-            self._update_text_with_char_input(' ')
-        elif key_text == 'backspace':
-            self._backspace()
-        else:
-            pass
-
-    def _backspace(self):
-        self._text = self._text[:-1]
 
 
     def render_all(self):
         if not self._is_initialized:
             return
         # clear display
-        self._screen.fill((0, 0, 0))
-        some_words = self._small_font.render(self._text, True, (0, 255, 0))
-        self._screen.blit(some_words, (0, 0))
+        self._display_surface.fill((0, 0, 0))
+        self._display_surface.blit(self._reset_surf, self._reset_rect)
+        self._display_surface.blit(self._solve_surf, self._solve_rect)
+        self._display_surface.blit(self._new_surf, self._new_rect)
         pygame.display.update()
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
         pygame.init()
-        pygame.font.init()
-        pygame.display.set_caption('demo game')
-        self._screen = pygame.display.set_mode((600, 60))
-        self._small_font = pygame.font.Font(None, 40)
+        pygame.display.set_caption('Slide Puzzle')
+        self._display_surface = pygame.display.set_mode((
+            settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
         self._is_initialized = True
-        print('VIEW INITIALIZED')
+        self._BASIC_FONT = pygame.font.Font('freesansbold.ttf',
+                                      settings.BASIC_FONT_SIZE)
+        reset_button_coords = coords.PixelCoords(
+            settings.WINDOW_WIDTH - 120,
+            settings.WINDOW_HEIGHT - 90)
+        new_game_button_coords = coords.PixelCoords(
+            settings.WINDOW_WIDTH - 120,
+            settings.WINDOW_HEIGHT - 60)
+        solve_button_coords = coords.PixelCoords(
+            settings.WINDOW_WIDTH - 120,
+            settings.WINDOW_HEIGHT - 30)
+        self._reset_surf, self._reset_rect = self.makeText(
+            'Reset',
+            settings.TEXT_COLOR,
+            settings.TILE_COLOR,
+            reset_button_coords)
+        self._new_surf, self._new_rect = self.makeText(
+            'New Game',
+            settings.TEXT_COLOR,
+            settings.TILE_COLOR,
+            new_game_button_coords)
+        self._solve_surf, self._solve_rect = self.makeText(
+            'Solve',
+            settings.TEXT_COLOR,
+            settings.TILE_COLOR,
+            solve_button_coords)
+
+    def makeText(self, text, color, bgcolor, top_left_coords):
+        # create the Surface and Rect objects for some text.
+        textSurf = self._BASIC_FONT.render(text, True, color, bgcolor)
+        textRect = textSurf.get_rect()
+        textRect.top = top_left_coords.pixel_y
+        textRect.left = top_left_coords.pixel_x
+        return (textSurf, textRect)

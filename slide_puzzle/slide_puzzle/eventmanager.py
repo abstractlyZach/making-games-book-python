@@ -5,7 +5,7 @@ from . import events
 
 
 def should_be_logged(event):
-    if not isinstance(events.TickEvent):
+    if not isinstance(event, events.TickEvent):
         return True
 
 class EventManager(object):

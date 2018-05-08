@@ -1,6 +1,7 @@
 import pygame
 
 from . import events
+from . import coords
 
 
 class Controller(object):
@@ -24,5 +25,9 @@ class Controller(object):
             self._event_manager.post(events.QuitEvent())
         elif (event.type == pygame.KEYUP):
             self._event_manager.post(events.KeyPressEvent(event.key))
+        elif (event.type == pygame.MOUSEBUTTONUP):
+            x, y = event.pos
+            click_coords = coords.PixelCoords(x, y)
+            self._event_manager.post(events.ClickEvent(click_coords))
 
 
