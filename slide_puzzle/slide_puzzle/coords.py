@@ -3,11 +3,11 @@ import math
 from . import settings
 from .settings import WINDOW_WIDTH, WINDOW_HEIGHT, X_MARGIN, Y_MARGIN
 
-def get_all_box_coords():
+def get_all_tile_coords():
     all_coords = []
     for x in range(settings.BOARD_WIDTH):
         for y in range(settings.BOARD_HEIGHT):
-            all_coords.append(BoxCoords(x, y))
+            all_coords.append(TileCoords(x, y))
     return all_coords
 
 def top_left_coords_of_box(coord):
@@ -91,16 +91,16 @@ class PixelCoords(object):
         return self._pixel_y
 
     @property
-    def box_x(self):
-        return self._box_x
+    def tile_x(self):
+        return self._tile_x
 
     @property
-    def box_y(self):
-        return self._box_y
+    def tile_y(self):
+        return self._tile_y
 
     @property
     def in_a_box(self):
-        return (self.box_x is not None) and (self.box_y is not None)
+        return (self.tile_x is not None) and (self.tile_y is not None)
 
     def __str__(self):
         return '{}: ({}, {})'.format(self.__class__.__name__, self._pixel_x,
@@ -109,24 +109,36 @@ class PixelCoords(object):
     @property
     def box_coords_str(self):
         if self.in_a_box:
-            return '({}, {})'.format(self.box_x, self.box_y)
+            return '({}, {})'.format(self.tile_x, self.tile_y)
         else:
             return 'Not in a box.'
 
 
 
-class BoxCoords(object):
+class TileCoords(object):
     def __init__(self, x, y):
         self._x = x
         self._y = y
 
+    def _check_tile_is_in_bounds(self):
+        if self._x >= settings.BOARD_WIDTH or self._y >= settings.BOARD_HEIGHT:
+            raise OutOfBoundsException('Coordinate ({}) is out of '
+                                       'bounds.'.format((self._x, self._y)))
+
     @property
-    def box_x(self):
+    def tile_x(self):
         return self._x
 
     @property
-    def box_y(self):
+    def tile_y(self):
         return self._y
+
+    def __eq__(self, other):
+        return self._x == other._x and self._y == other._y
 
     def __str__(self):
         return '{}: ({}, {})'.format(self.__class__.__name__, self._x, self._y)
+
+
+class OutOfBoundsException(Exception):
+    pass

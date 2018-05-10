@@ -1,5 +1,3 @@
-import pygame
-
 from . import constants
 
 
@@ -10,7 +8,6 @@ BOARD_HEIGHT = 4 # number of rows in the board
 TILE_SIZE = 80
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
-BLANK = None
 BASIC_FONT_SIZE = 20
 
 BUTTON_COLOR = constants.WHITE
