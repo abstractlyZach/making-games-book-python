@@ -29,14 +29,6 @@ class Model(object):
         self._board = board.Board()
         self._move_history = []
 
-    def notify(self, event):
-        if isinstance(event, events.QuitEvent):
-            self._running = False
-        elif isinstance(event, events.MoveEvent):
-            self._handle_move_event(event)
-        elif isinstance(event, events.InitializeEvent):
-            self.shuffle_tiles()
-
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
         each loop."""
@@ -47,8 +39,13 @@ class Model(object):
             self._event_manager.post(tick)
             self._clock.tick(settings.FPS)
 
-    def get_tile_number(self, coord):
-        return self._board.get_tile_number(coord)
+    def notify(self, event):
+        if isinstance(event, events.QuitEvent):
+            self._running = False
+        elif isinstance(event, events.MoveEvent):
+            self._handle_move_event(event)
+        elif isinstance(event, events.InitializeEvent):
+            self.shuffle_tiles()
 
     def _handle_move_event(self, event):
         if self._board.is_valid_move(event.direction):
@@ -56,6 +53,9 @@ class Model(object):
             self._move_history.append(event.direction)
         else:
             logging.error('Invalid move.')
+
+    def get_tile_number(self, coord):
+        return self._board.get_tile_number(coord)
 
     def get_random_move(self):
         """Returns a random move that doesn't undo the last move."""
