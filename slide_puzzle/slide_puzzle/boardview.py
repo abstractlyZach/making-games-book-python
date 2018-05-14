@@ -5,7 +5,11 @@ from . import coords
 from . import settings
 from . import constants
 
-MovingTile = namedtuple('MovingTile', 'coord x_delta y_delta')
+MovingTile = namedtuple('MovingTile', 'coord '
+                                      'x_delta '
+                                      'y_delta '
+                                      'x_velocity '
+                                      'y_velocity ')
 
 
 class BoardView(object):
@@ -42,11 +46,39 @@ class BoardView(object):
         tiles_that_dont_move = coords.get_all_tile_coords()
         if self._moving_tile is not None:
             tiles_that_dont_move.remove(self._moving_tile.coord)
+            self._progress_animation()
             self._draw_tile_at_coord(self._moving_tile.coord,
                                      x_delta=self._moving_tile.x_delta,
                                      y_delta=self._moving_tile.y_delta)
+            self._check_animation_complete()
         for coord in tiles_that_dont_move:
             self._draw_tile_at_coord(coord)
+
+    def _begin_animation(self, coord, direction):
+        x_velocity = 0
+        y_velocity = 0
+        if direction == constants.UP:
+            y_velocity = settings.ANIMATION_SPEED
+        elif direction == constants.DOWN:
+            y_velocity = -settings.ANIMATION_SPEED
+        elif direction == constants.LEFT:
+            x_velocity = -settings.ANIMATION_SPEED
+        elif direction == constants.RIGHT:
+            y_velocity = settings.ANIMATION_SPEED
+        self._moving_tile = MovingTile(coord, 0, 0,  x_velocity, y_velocity)
+
+    def _check_animation_complete(self):
+        x_movement_complete = \
+            abs(self._moving_tile.x_delta) >= settings.TILE_SIZE
+        y_movement_complete = \
+            abs(self._moving_tile.y_delta) >= settings.TILE_SIZE
+        if x_movement_complete or y_movement_complete:
+            self._moving_tile = None
+
+    def _progress_animation(self):
+        if self._moving_tile is not None:
+            self._moving_tile.x_delta += self._moving_tile.x_velocity
+            self._moving_tile.y_delta += self._moving_tile.y_velocity
 
     def _draw_tile_at_coord(self, coord, x_delta=0, y_delta=0):
         tile_text = str(self._model.get_tile_number(coord))
