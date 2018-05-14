@@ -13,6 +13,7 @@ class BoardView(object):
         self._display_surface = display_surface
         self._model = model
         self._font = font
+        self._moving_tile = None
 
     def render(self):
         self._draw_border()
@@ -38,15 +39,25 @@ class BoardView(object):
                          border_size)
 
     def _draw_all_tiles(self):
-        for coord in coords.get_all_tile_coords():
+        tiles_that_dont_move = coords.get_all_tile_coords()
+        if self._moving_tile is not None:
+            tiles_that_dont_move.remove(self._moving_tile.coord)
+            self._draw_tile_at_coord(self._moving_tile.coord,
+                                     x_delta=self._moving_tile.x_delta,
+                                     y_delta=self._moving_tile.y_delta)
+        for coord in tiles_that_dont_move:
             self._draw_tile_at_coord(coord)
 
-    def _draw_tile_at_coord(self, coord):
+    def _draw_tile_at_coord(self, coord, x_delta=0, y_delta=0):
         tile_text = str(self._model.get_tile_number(coord))
         if tile_text != str(constants.BLANK):
-            top_left_corner = coords.top_left_coord_of_tile(coord)
-            tile_rectangle = (top_left_corner.pixel_x,
-                              top_left_corner.pixel_y,
+            top_left_corner= coords.top_left_coord_of_tile(coord)
+            top_left_corner_with_delta = coords.PixelCoords(
+                top_left_corner.pixel_x + x_delta,
+                top_left_corner.pixel_y + y_delta
+            )
+            tile_rectangle = (top_left_corner_with_delta.pixel_x,
+                              top_left_corner_with_delta.pixel_y,
                               settings.TILE_SIZE,
                               settings.TILE_SIZE)
             pygame.draw.rect(self._display_surface,
@@ -61,8 +72,8 @@ class BoardView(object):
                                              settings.TEXT_COLOR)
             text_rectangle = text_surface.get_rect()
             text_rectangle.center = (
-                top_left_corner.pixel_x + settings.TILE_SIZE / 2,
-                top_left_corner.pixel_y + settings.TILE_SIZE / 2,
+                top_left_corner_with_delta.pixel_x + settings.TILE_SIZE / 2,
+                top_left_corner_with_delta.pixel_y + settings.TILE_SIZE / 2,
             )
             self._display_surface.blit(text_surface, text_rectangle)
 
