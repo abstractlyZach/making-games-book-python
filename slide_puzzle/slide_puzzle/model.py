@@ -21,13 +21,14 @@ def opposite_direction(direction):
 
 class Model(object):
     """Tracks the game state."""
-    def __init__(self, event_manager):
-        self._event_manager = event_manager
+    def __init__(self, general_event_manager, animation_event_manager):
+        self._event_manager = general_event_manager
         self._event_manager.register_listener(self)
         self._running = False
         self._clock = pygame.time.Clock()
         self._board = board.Board()
         self._move_history = []
+        self._animation_event_manager = animation_event_manager
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for

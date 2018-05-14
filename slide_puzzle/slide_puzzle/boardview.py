@@ -13,7 +13,9 @@ MovingTile = namedtuple('MovingTile', 'coord '
 
 
 class BoardView(object):
-    def __init__(self, display_surface, model, font):
+    def __init__(self, animation_event_manager, display_surface, model, font):
+        animation_event_manager.register_listener(self)
+        self._animation_event_manager = animation_event_manager
         self._display_surface = display_surface
         self._model = model
         self._font = font
