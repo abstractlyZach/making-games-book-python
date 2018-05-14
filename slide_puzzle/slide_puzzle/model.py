@@ -60,11 +60,14 @@ class Model(object):
     def get_random_move(self):
         """Returns a random move that doesn't undo the last move."""
         valid_moves = copy.copy(constants.ALL_DIRECTIONS)
+        invalid_moves = []
         if len(self._move_history) > 0:
             valid_moves.remove(opposite_direction(self._move_history[-1]))
         for move in valid_moves:
             if not self._board.is_valid_move(move):
-                valid_moves.remove(move)
+                invalid_moves.append(move)
+        for invalid_move in invalid_moves:
+            valid_moves.remove(invalid_move)
         return random.choice(valid_moves)
 
     def shuffle_tiles(self):
