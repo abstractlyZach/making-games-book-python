@@ -26,18 +26,6 @@ class GraphicalView(object):
         elif isinstance(event, events.TickEvent):
             self.render_all()
 
-
-    def render_all(self):
-        if not self._is_initialized:
-            return
-        # clear display
-        self._display_surface.fill((0, 0, 0))
-        self._display_surface.blit(self._reset_surf, self._reset_rect)
-        self._display_surface.blit(self._solve_surf, self._solve_rect)
-        self._display_surface.blit(self._new_surf, self._new_rect)
-        self._board_view.render()
-        pygame.display.update()
-
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
         pygame.init()
@@ -52,6 +40,9 @@ class GraphicalView(object):
             self._model,
             self._BASIC_FONT
         )
+        self._create_buttons()
+
+    def _create_buttons(self):
         reset_button_coords = coords.PixelCoords(
             settings.WINDOW_WIDTH - 120,
             settings.WINDOW_HEIGHT - 90)
@@ -76,6 +67,17 @@ class GraphicalView(object):
             settings.TEXT_COLOR,
             settings.TILE_COLOR,
             solve_button_coords)
+
+    def render_all(self):
+        if not self._is_initialized:
+            return
+        # clear display
+        self._display_surface.fill((0, 0, 0))
+        self._display_surface.blit(self._reset_surf, self._reset_rect)
+        self._display_surface.blit(self._solve_surf, self._solve_rect)
+        self._display_surface.blit(self._new_surf, self._new_rect)
+        self._board_view.render()
+        pygame.display.update()
 
     def makeText(self, text, color, bgcolor, top_left_coords):
         # create the Surface and Rect objects for some text.
