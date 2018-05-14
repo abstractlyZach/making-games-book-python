@@ -10,4 +10,6 @@ DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
 
+ALL_DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
+
 BLANK = None

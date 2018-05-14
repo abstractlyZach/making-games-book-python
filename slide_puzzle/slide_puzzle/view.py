@@ -2,6 +2,7 @@ import pygame
 
 from . import settings
 from . import coords
+from . import boardview
 
 from slide_puzzle import events
 
@@ -17,6 +18,7 @@ class GraphicalView(object):
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
+            self._is_initialized = False
             # ends the pygame graphical display
             pygame.quit()
         elif isinstance(event, events.InitializeEvent):
@@ -33,6 +35,7 @@ class GraphicalView(object):
         self._display_surface.blit(self._reset_surf, self._reset_rect)
         self._display_surface.blit(self._solve_surf, self._solve_rect)
         self._display_surface.blit(self._new_surf, self._new_rect)
+        self._board_view.render()
         pygame.display.update()
 
     def initialize(self):
@@ -44,6 +47,11 @@ class GraphicalView(object):
         self._is_initialized = True
         self._BASIC_FONT = pygame.font.Font('freesansbold.ttf',
                                       settings.BASIC_FONT_SIZE)
+        self._board_view = boardview.BoardView(
+            self._display_surface,
+            self._model,
+            self._BASIC_FONT
+        )
         reset_button_coords = coords.PixelCoords(
             settings.WINDOW_WIDTH - 120,
             settings.WINDOW_HEIGHT - 90)

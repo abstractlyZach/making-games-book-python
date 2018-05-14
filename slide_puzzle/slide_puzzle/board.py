@@ -42,6 +42,27 @@ class Board(object):
                 return coord
 
     def make_move(self, move):
+        sliding_tile_coord = self._predict_new_blank_tile_coord(move)
+        blank_tile_coord = self.get_blank_tile_coord()
+        self._swap_tiles(blank_tile_coord, sliding_tile_coord)
+
+    def _swap_tiles(self, coord1, coord2):
+        coord1_number = self.get_tile_number(coord1)
+        coord2_number = self.get_tile_number(coord2)
+        self._set_tile(coord1, coord2_number)
+        self._set_tile(coord2, coord1_number)
+
+    def _set_tile(self, coord, number):
+        self._board[coord.tile_y][coord.tile_x] = number
+
+    def is_valid_move(self, move):
+        try:
+            self._predict_new_blank_tile_coord(move)
+        except coords.OutOfBoundsException:
+            return False
+        return True
+
+    def _predict_new_blank_tile_coord(self, move):
         blank_tile_coord = self.get_blank_tile_coord()
         if move == constants.UP:
             sliding_tile_coord = coords.TileCoords(
@@ -65,13 +86,4 @@ class Board(object):
             )
         else:
             raise Exception('Invalid move input.')
-        self._swap_tiles(blank_tile_coord, sliding_tile_coord)
-
-    def _swap_tiles(self, coord1, coord2):
-        coord1_number = self.get_tile_number(coord1)
-        coord2_number = self.get_tile_number(coord2)
-        self._set_tile(coord1, coord2_number)
-        self._set_tile(coord2, coord1_number)
-
-    def _set_tile(self, coord, number):
-        self._board[coord.tile_y][coord.tile_x] = number
+        return sliding_tile_coord

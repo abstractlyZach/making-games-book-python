@@ -10,10 +10,9 @@ def get_all_tile_coords():
             all_coords.append(TileCoords(x, y))
     return all_coords
 
-def top_left_coords_of_box(coord):
-    left = (coord.box_x * (BOX_SIZE + GAP_SIZE)) + X_MARGIN + int(GAP_SIZE
-                                                                  / 2)
-    top = (coord.box_y * (BOX_SIZE + GAP_SIZE)) + Y_MARGIN + int(GAP_SIZE / 2)
+def top_left_coord_of_tile(coord):
+    left = (coord.tile_x * (settings.TILE_SIZE)) + X_MARGIN
+    top = (coord.tile_y * (settings.TILE_SIZE)) + Y_MARGIN
     return PixelCoords(left, top)
 
 
@@ -119,9 +118,12 @@ class TileCoords(object):
     def __init__(self, x, y):
         self._x = x
         self._y = y
+        self._check_tile_is_in_bounds()
 
     def _check_tile_is_in_bounds(self):
-        if self._x >= settings.BOARD_WIDTH or self._y >= settings.BOARD_HEIGHT:
+        x_in_bounds = self._x < settings.BOARD_WIDTH  and self._x >= 0
+        y_in_bounds = self._y < settings.BOARD_HEIGHT and self._y >= 0
+        if not(x_in_bounds and y_in_bounds):
             raise OutOfBoundsException('Coordinate ({}) is out of '
                                        'bounds.'.format((self._x, self._y)))
 

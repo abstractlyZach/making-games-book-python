@@ -1,4 +1,5 @@
 import pygame
+from . import constants
 
 
 class Event(object):
@@ -56,4 +57,15 @@ class ClickEvent(InputEvent):
         return '{}: {}'.format(self._name, self._position)
 
 
+class MoveEvent(Event):
+    def __init__(self, direction):
+        self._name = f'{direction} Move Event'
+        if direction in constants.ALL_DIRECTIONS:
+            self._direction = direction
+        else:
+            raise Exception(f'{direction} is not a direction.')
+
+    @property
+    def direction(self):
+        return self._direction
 
