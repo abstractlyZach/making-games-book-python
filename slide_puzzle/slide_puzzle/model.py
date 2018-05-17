@@ -31,6 +31,7 @@ class Model(object):
         self._move_history = []
         self._animation_request_queue = list()
         self._waiting_for_animation = False
+        self._move_queue = []
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -50,18 +51,25 @@ class Model(object):
         elif isinstance(event, events.MoveEvent):
             self._handle_move_event(event)
         elif isinstance(event, events.InitializeEvent):
-            pass
-            # self.shuffle_tiles()
+            # pass
+            self.shuffle_tiles()
 
     def _handle_tick(self):
         self._board.update()
+        if not self._board.sliding and len(self._move_queue) > 0:
+            move = self._move_queue.pop(0)
+            self._start_move(move)
 
     def _handle_move_event(self, event):
         direction = event.direction
+        self._move_queue.append(direction)
+
+    def _start_move(self, direction):
         if self._board.is_valid_move(direction):
-            self._board.make_move(direction)
+            self._board.begin_move(direction)
         else:
-            logging.error('Invalid move.')
+            logging.error(f'invalid move: {direction}')
+
 
     def get_tile(self, coord):
         return self._board.get_tile(coord)
@@ -69,21 +77,25 @@ class Model(object):
     def get_tile_number(self, coord):
         return self._board.get_tile(coord).number
 
-    def get_random_move(self):
+    def get_random_move(self, board, move_history):
         """Returns a random move that doesn't undo the last move."""
         valid_moves = copy.copy(constants.ALL_DIRECTIONS)
         invalid_moves = []
-        if len(self._move_history) > 0:
-            valid_moves.remove(opposite_direction(self._move_history[-1]))
+        if len(move_history) > 0:
+            valid_moves.remove(opposite_direction(move_history[-1]))
         for move in valid_moves:
-            if not self._board.is_valid_move(move):
+            if not board.is_valid_move(move):
                 invalid_moves.append(move)
         for invalid_move in invalid_moves:
             valid_moves.remove(invalid_move)
         return random.choice(valid_moves)
 
     def shuffle_tiles(self):
+        copied_board = self._board.copy()
+        move_history = list()
         for i in range(50):
-            random_move = self.get_random_move()
+            random_move = self.get_random_move(copied_board, move_history)
             self._event_manager.post(events.MoveEvent(random_move))
+            copied_board.make_move(random_move)
+            move_history.append(random_move)
 

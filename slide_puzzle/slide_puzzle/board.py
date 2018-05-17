@@ -1,3 +1,4 @@
+import copy
 from . import constants
 from . import tile
 from . import coords
@@ -48,6 +49,12 @@ class Board(object):
         blank_tile_coord = self.get_blank_tile_coord()
         sliding_tile_coord = \
             coords.get_adjacent_tile_coord(blank_tile_coord, move)
+        self._swap_tiles(blank_tile_coord, sliding_tile_coord)
+
+    def begin_move(self, move):
+        blank_tile_coord = self.get_blank_tile_coord()
+        sliding_tile_coord = \
+            coords.get_adjacent_tile_coord(blank_tile_coord, move)
         self._sliding_tile_coord = sliding_tile_coord
         target_tile = self.get_tile(self._sliding_tile_coord)
         target_tile.slide(move)
@@ -79,4 +86,12 @@ class Board(object):
         except coords.OutOfBoundsException:
             return False
         return True
+
+    @property
+    def sliding(self):
+        return self._sliding_tile_coord is not None
+
+    def copy(self):
+        copied_board = copy.deepcopy(self._board)
+        return Board(board= copied_board)
 
