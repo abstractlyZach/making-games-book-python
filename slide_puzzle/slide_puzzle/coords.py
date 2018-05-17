@@ -1,6 +1,7 @@
 import math
 
 from . import settings
+from . import constants
 from .settings import WINDOW_WIDTH, WINDOW_HEIGHT, X_MARGIN, Y_MARGIN
 
 def get_all_tile_coords():
@@ -14,6 +15,32 @@ def top_left_coord_of_tile(coord):
     left = (coord.tile_x * (settings.TILE_SIZE)) + X_MARGIN
     top = (coord.tile_y * (settings.TILE_SIZE)) + Y_MARGIN
     return PixelCoords(left, top)
+
+def get_adjacent_tile_coord(coord, direction):
+    if direction == constants.UP:
+        adjacent_coord = TileCoords(
+            coord.tile_x,
+            coord.tile_y + 1
+        )
+    elif direction == constants.DOWN:
+        adjacent_coord = TileCoords(
+            coord.tile_x,
+            coord.tile_y - 1
+        )
+    elif direction == constants.LEFT:
+        adjacent_coord = TileCoords(
+            coord.tile_x + 1,
+            coord.tile_y
+        )
+    elif direction == constants.RIGHT:
+        adjacent_coord = TileCoords(
+            coord.tile_x - 1,
+            coord.tile_y
+        )
+    else:
+        raise Exception('Invalid move input.')
+    return adjacent_coord
+
 
 
 class PixelCoords(object):

@@ -4,6 +4,7 @@ import random
 import pygame
 
 from . import events
+from . import coords
 from . import settings
 from . import board
 from . import constants
@@ -21,14 +22,15 @@ def opposite_direction(direction):
 
 class Model(object):
     """Tracks the game state."""
-    def __init__(self, general_event_manager, animation_event_manager):
+    def __init__(self, general_event_manager):
         self._event_manager = general_event_manager
         self._event_manager.register_listener(self)
         self._running = False
         self._clock = pygame.time.Clock()
         self._board = board.Board()
         self._move_history = []
-        self._animation_event_manager = animation_event_manager
+        self._animation_request_queue = list()
+        self._waiting_for_animation = False
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -43,20 +45,29 @@ class Model(object):
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
+        elif isinstance(event, events.TickEvent):
+            self._handle_tick()
         elif isinstance(event, events.MoveEvent):
             self._handle_move_event(event)
         elif isinstance(event, events.InitializeEvent):
-            self.shuffle_tiles()
+            pass
+            # self.shuffle_tiles()
+
+    def _handle_tick(self):
+        self._board.update()
 
     def _handle_move_event(self, event):
-        if self._board.is_valid_move(event.direction):
-            self._board.make_move(event.direction)
-            self._move_history.append(event.direction)
+        direction = event.direction
+        if self._board.is_valid_move(direction):
+            self._board.make_move(direction)
         else:
             logging.error('Invalid move.')
 
+    def get_tile(self, coord):
+        return self._board.get_tile(coord)
+
     def get_tile_number(self, coord):
-        return self._board.get_tile_number(coord)
+        return self._board.get_tile(coord).number
 
     def get_random_move(self):
         """Returns a random move that doesn't undo the last move."""

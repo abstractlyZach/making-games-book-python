@@ -1,4 +1,5 @@
 from . import constants
+from . import tile
 from . import coords
 from . import settings
 
@@ -21,6 +22,8 @@ class Board(object):
             self._create_new_board()
         else:
             self._board = board
+        self._sliding_tile_coord = None
+        print(self._board)
 
     def _create_new_board(self):
         current_number = 1
@@ -28,62 +31,53 @@ class Board(object):
         for y in range(settings.BOARD_HEIGHT):
             row = []
             for x in range(settings.BOARD_WIDTH):
-                row.append(current_number)
+                current_tile = tile.Tile(current_number)
+                row.append(current_tile)
                 current_number += 1
             self._board.append(row)
-        self._board[-1][-1] = constants.BLANK
+        self._board[-1][-1] = tile.Tile(constants.BLANK)
 
-    def get_tile_number(self, coord):
+    def get_tile(self, coord):
         return self._board[coord.tile_y][coord.tile_x]
 
     def get_blank_tile_coord(self):
         for coord in coords.get_all_tile_coords():
-            if self.get_tile_number(coord) == constants.BLANK:
+            if self.get_tile(coord).number == constants.BLANK:
                 return coord
 
     def make_move(self, move):
-        sliding_tile_coord = self._predict_new_blank_tile_coord(move)
         blank_tile_coord = self.get_blank_tile_coord()
-        self._swap_tiles(blank_tile_coord, sliding_tile_coord)
+        sliding_tile_coord = \
+            coords.get_adjacent_tile_coord(blank_tile_coord, move)
+        self._sliding_tile_coord = sliding_tile_coord
+        target_tile = self.get_tile(self._sliding_tile_coord)
+        target_tile.slide(move)
+
+    def update(self):
+        for coord in coords.get_all_tile_coords():
+            tile = self.get_tile(coord)
+            tile.update()
+        if self._sliding_tile_coord is not None:
+            sliding_tile = self.get_tile(self._sliding_tile_coord)
+            if not sliding_tile.is_sliding: # slide motion is finished
+                blank_tile_coord = self.get_blank_tile_coord()
+                self._swap_tiles(blank_tile_coord, self._sliding_tile_coord)
+                self._sliding_tile_coord = None
 
     def _swap_tiles(self, coord1, coord2):
-        coord1_number = self.get_tile_number(coord1)
-        coord2_number = self.get_tile_number(coord2)
-        self._set_tile(coord1, coord2_number)
-        self._set_tile(coord2, coord1_number)
+        coord1_tile = self.get_tile(coord1)
+        coord2_tile = self.get_tile(coord2)
+        self._set_tile(coord1, coord2_tile)
+        self._set_tile(coord2, coord1_tile)
 
-    def _set_tile(self, coord, number):
-        self._board[coord.tile_y][coord.tile_x] = number
+    def _set_tile(self, coord, tile):
+        self._board[coord.tile_y][coord.tile_x] = tile
 
     def is_valid_move(self, move):
+        blank_tile_coord = self.get_blank_tile_coord()
         try:
-            self._predict_new_blank_tile_coord(move)
+            coords.get_adjacent_tile_coord(blank_tile_coord, move)
         except coords.OutOfBoundsException:
             return False
         return True
 
-    def _predict_new_blank_tile_coord(self, move):
-        blank_tile_coord = self.get_blank_tile_coord()
-        if move == constants.UP:
-            sliding_tile_coord = coords.TileCoords(
-                blank_tile_coord.tile_x,
-                blank_tile_coord.tile_y + 1
-            )
-        elif move == constants.DOWN:
-            sliding_tile_coord = coords.TileCoords(
-                blank_tile_coord.tile_x,
-                blank_tile_coord.tile_y - 1
-            )
-        elif move == constants.LEFT:
-            sliding_tile_coord = coords.TileCoords(
-                blank_tile_coord.tile_x + 1,
-                blank_tile_coord.tile_y
-            )
-        elif move == constants.RIGHT:
-            sliding_tile_coord = coords.TileCoords(
-                blank_tile_coord.tile_x - 1,
-                blank_tile_coord.tile_y
-            )
-        else:
-            raise Exception('Invalid move input.')
-        return sliding_tile_coord

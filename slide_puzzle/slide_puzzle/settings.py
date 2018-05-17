@@ -26,4 +26,4 @@ Y_MARGIN = int((WINDOW_HEIGHT -
                (TILE_SIZE * BOARD_HEIGHT + (BOARD_HEIGHT - 1)))
               / 2)
 
-ANIMATION_SPEED = 1
+ANIMATION_SPEED = 15

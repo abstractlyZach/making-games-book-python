@@ -9,10 +9,8 @@ from slide_puzzle import events
 
 class GraphicalView(object):
     """Draws the model's state to the screen."""
-    def __init__(self, event_manager, animation_event_manager, model):
+    def __init__(self, event_manager, model):
         event_manager.register_listener(self)
-        animation_event_manager.register_listener(self)
-        self._animation_event_manager = animation_event_manager
         self._model = model
         self._is_initialized = False
         self._display_surface = None
@@ -38,7 +36,6 @@ class GraphicalView(object):
         self._BASIC_FONT = pygame.font.Font('freesansbold.ttf',
                                       settings.BASIC_FONT_SIZE)
         self._board_view = boardview.BoardView(
-            self._animation_event_manager,
             self._display_surface,
             self._model,
             self._BASIC_FONT

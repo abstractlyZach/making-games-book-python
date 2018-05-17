@@ -11,7 +11,7 @@ def match_board(expected_numbers, board):
         for x in range(settings.BOARD_WIDTH):
             expected_number = expected_numbers[current_index]
             coord = coords.TileCoords(x, y)
-            assert expected_number == board.get_tile_number(coord)
+            assert expected_number == board.get_tile(coord).number
             current_index += 1
 
 def test_no_exceptions_on_init():

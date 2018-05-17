@@ -16,6 +16,13 @@ class Tile(object):
     def is_sliding(self):
         return self._is_sliding
 
+    @property
+    def x_delta(self):
+        return self._x_delta
+    @property
+    def y_delta(self):
+        return self._y_delta
+
     def slide(self, direction):
         self._is_sliding = True
         self._x_velocity = 0
@@ -36,11 +43,15 @@ class Tile(object):
 
     def _move_tile(self):
         self._x_delta += self._x_velocity
-        self._y_delta += self._y_delta
+        self._y_delta += self._y_velocity
 
     def _check_for_slide_end(self):
         x_animation_complete = abs(self._x_delta) >= settings.TILE_SIZE
         y_animation_complete = abs(self._y_delta) >= settings.TILE_SIZE
         if x_animation_complete or y_animation_complete:
             self._is_sliding = False
+            self._x_delta = 0
+            self._y_delta = 0
 
+    def __repr__(self):
+        return f'Tile({self._number})'
