@@ -23,7 +23,6 @@ class Board(object):
         else:
             self._board = board
         self._sliding_tile_coord = None
-        print(self._board)
 
     def _create_new_board(self):
         current_number = 1
