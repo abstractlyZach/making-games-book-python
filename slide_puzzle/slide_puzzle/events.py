@@ -58,8 +58,9 @@ class ClickEvent(InputEvent):
 
 
 class MoveEvent(Event):
-    def __init__(self, direction):
+    def __init__(self, direction, record_move=True):
         self._name = f'{direction} Move Event'
+        self._record_move = record_move
         if direction in constants.ALL_DIRECTIONS:
             self._direction = direction
         else:
@@ -69,6 +70,9 @@ class MoveEvent(Event):
     def direction(self):
         return self._direction
 
+    @property
+    def record_move(self):
+        return self._record_move
 
 class ResetEvent(Event):
     def __init__(self):

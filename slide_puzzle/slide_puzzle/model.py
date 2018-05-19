@@ -32,7 +32,6 @@ class Model(object):
         self._animation_request_queue = list()
         self._waiting_for_animation = False
         self._move_queue = []
-        self._blocking_input = False
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -63,13 +62,15 @@ class Model(object):
             self._start_move(move)
 
     def _handle_move_event(self, event):
-        direction = event.direction
-        self._move_queue.append(direction)
+        self._move_queue.append(event)
 
-    def _start_move(self, direction):
+    def _start_move(self, move_event):
+        direction = move_event.direction
+        should_record = move_event.record_move
         if self._board.is_valid_move(direction):
             self._board.begin_move(direction)
-            self._move_history.append(direction)
+            if should_record:
+                self._move_history.append(direction)
         else:
             logging.error(f'invalid move: {direction}')
 
@@ -102,9 +103,10 @@ class Model(object):
             move_history.append(random_move)
 
     def reset(self):
-        self._blocking_input = True
         moves_to_reset = copy.copy(self._move_history)
         while len(moves_to_reset) > 0:
             move = moves_to_reset.pop()
             opposite_move = opposite_direction(move)
-            self._event_manager.post(events.MoveEvent(opposite_move))
+            self._event_manager.post(events.MoveEvent(opposite_move,
+                                                      record_move=False))
+        self._move_history = list()
