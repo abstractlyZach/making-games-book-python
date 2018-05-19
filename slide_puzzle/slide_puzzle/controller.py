@@ -44,6 +44,12 @@ class Controller(object):
         if event.key in DIRECTIONAL_KEYS:
             move_direction = self._get_move_direction(event.key)
             self._event_manager.post(events.MoveEvent(move_direction))
+        elif event.key == pygame.K_r:
+            self._event_manager.post(events.ResetEvent())
+        elif event.key == pygame.K_s:
+            self._event_manager.post(events.SolveEvent())
+        elif event.key == pygame.K_n:
+            self._event_manager.post(events.NewGameEvent())
 
     def _get_move_direction(self, event_key):
         if event_key == pygame.K_UP:
