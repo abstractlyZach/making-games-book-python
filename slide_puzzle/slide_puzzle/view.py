@@ -1,6 +1,7 @@
 import pygame
 
 from . import settings
+from . import events
 from . import coords
 from . import boardview
 
@@ -11,6 +12,7 @@ class GraphicalView(object):
     """Draws the model's state to the screen."""
     def __init__(self, event_manager, model):
         event_manager.register_listener(self)
+        self._event_manager = event_manager
         self._model = model
         self._is_initialized = False
         self._display_surface = None
@@ -67,6 +69,7 @@ class GraphicalView(object):
             settings.TEXT_COLOR,
             settings.TILE_COLOR,
             solve_button_coords)
+        self._event_manager.post(events.SetResetRect(self._reset_rect))
 
     def render_all(self):
         if not self._is_initialized:

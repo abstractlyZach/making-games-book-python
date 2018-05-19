@@ -32,6 +32,7 @@ class Model(object):
         self._animation_request_queue = list()
         self._waiting_for_animation = False
         self._move_queue = []
+        self._blocking_input = False
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -51,8 +52,9 @@ class Model(object):
         elif isinstance(event, events.MoveEvent):
             self._handle_move_event(event)
         elif isinstance(event, events.InitializeEvent):
-            # pass
             self.shuffle_tiles()
+        elif isinstance(event, events.ResetEvent):
+            self.reset()
 
     def _handle_tick(self):
         self._board.update()
@@ -67,9 +69,9 @@ class Model(object):
     def _start_move(self, direction):
         if self._board.is_valid_move(direction):
             self._board.begin_move(direction)
+            self._move_history.append(direction)
         else:
             logging.error(f'invalid move: {direction}')
-
 
     def get_tile(self, coord):
         return self._board.get_tile(coord)
@@ -99,3 +101,10 @@ class Model(object):
             copied_board.make_move(random_move)
             move_history.append(random_move)
 
+    def reset(self):
+        self._blocking_input = True
+        moves_to_reset = copy.copy(self._move_history)
+        while len(moves_to_reset) > 0:
+            move = moves_to_reset.pop()
+            opposite_move = opposite_direction(move)
+            self._event_manager.post(events.MoveEvent(opposite_move))

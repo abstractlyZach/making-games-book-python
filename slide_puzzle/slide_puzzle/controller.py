@@ -21,6 +21,8 @@ class Controller(object):
         if isinstance(event, events.TickEvent):
             for input_event in pygame.event.get():
                 self._handle_event(input_event)
+        elif isinstance(event, events.SetResetRect):
+            self._reset_rect = event.rectangle
 
     def _handle_event(self, event):
         if event.type == pygame.QUIT:
@@ -31,9 +33,7 @@ class Controller(object):
         elif (event.type == pygame.KEYUP):
             self._handle_keypress(event)
         elif (event.type == pygame.MOUSEBUTTONUP):
-            x, y = event.pos
-            click_coords = coords.PixelCoords(x, y)
-            self._event_manager.post(events.ClickEvent(click_coords))
+            self._handle_click_event(event)
 
     def _handle_keypress(self, event):
         self._event_manager.post(events.KeyPressEvent(event.key))
@@ -51,5 +51,9 @@ class Controller(object):
         elif event_key == pygame.K_RIGHT:
             return constants.RIGHT
 
-
-
+    def _handle_click_event(self, event):
+        x, y = event.pos
+        if self._reset_rect.collidepoint(event.pos):
+            self._event_manager.post(events.ResetEvent())
+        click_coords = coords.PixelCoords(x, y)
+        self._event_manager.post(events.ClickEvent(click_coords))

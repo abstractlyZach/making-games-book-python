@@ -69,3 +69,17 @@ class MoveEvent(Event):
     def direction(self):
         return self._direction
 
+
+class ResetEvent(Event):
+    def __init__(self):
+        self._name = f'Reset Event'
+
+
+class SetResetRect(Event):
+    def __init__(self, rectangle):
+        self._name = 'Setting Reset Rectangle Event'
+        self._rectangle = rectangle
+
+    @property
+    def rectangle(self):
+        return self._rectangle
