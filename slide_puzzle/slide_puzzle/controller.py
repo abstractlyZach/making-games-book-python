@@ -23,6 +23,10 @@ class Controller(object):
                 self._handle_event(input_event)
         elif isinstance(event, events.SetResetRect):
             self._reset_rect = event.rectangle
+        elif isinstance(event, events.SetSolveRect):
+            self._solve_rect = event.rectangle
+        elif isinstance(event, events.SetNewGameRect):
+            self._new_game_rect = event.rectangle
 
     def _handle_event(self, event):
         if event.type == pygame.QUIT:
@@ -55,5 +59,9 @@ class Controller(object):
         x, y = event.pos
         if self._reset_rect.collidepoint(event.pos):
             self._event_manager.post(events.ResetEvent())
+        elif self._solve_rect.collidepoint(event.pos):
+            self._event_manager.post(events.SolveEvent())
+        elif self._new_game_rect.collidepoint(event.pos):
+            self._event_manager.post(events.NewGameEvent())
         click_coords = coords.PixelCoords(x, y)
         self._event_manager.post(events.ClickEvent(click_coords))

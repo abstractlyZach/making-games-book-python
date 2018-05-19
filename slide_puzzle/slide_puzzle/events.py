@@ -58,9 +58,10 @@ class ClickEvent(InputEvent):
 
 
 class MoveEvent(Event):
-    def __init__(self, direction, record_move=True):
+    def __init__(self, direction, player_move=True, record_move=True):
         self._name = f'{direction} Move Event'
         self._record_move = record_move
+        self._player_move = player_move
         if direction in constants.ALL_DIRECTIONS:
             self._direction = direction
         else:
@@ -74,16 +75,48 @@ class MoveEvent(Event):
     def record_move(self):
         return self._record_move
 
+    @property
+    def player_move(self):
+        return self._player_move
+
+
 class ResetEvent(Event):
     def __init__(self):
         self._name = f'Reset Event'
 
 
-class SetResetRect(Event):
+class SolveEvent(Event):
+    def __init__(self):
+        self._name = 'Solve Event'
+
+
+class NewGameEvent(Event):
+    def __init__(self):
+        self._name = 'New Game Event'
+
+
+
+class SetRectEvent(Event):
     def __init__(self, rectangle):
-        self._name = 'Setting Reset Rectangle Event'
         self._rectangle = rectangle
 
     @property
     def rectangle(self):
         return self._rectangle
+
+
+class SetResetRect(SetRectEvent):
+    def __init__(self, rectangle):
+        self._name = 'Setting Reset Rectangle Event'
+        super().__init__(rectangle)
+
+
+class SetSolveRect(SetRectEvent):
+    def __init__(self, rectangle):
+        self._name = 'Setting Solve Rectangle Event'
+        super().__init__(rectangle)
+
+class SetNewGameRect(SetRectEvent):
+    def __init__(self, rectangle):
+        self._name = 'Setting New Game Rectangle Event'
+        super().__init__(rectangle)

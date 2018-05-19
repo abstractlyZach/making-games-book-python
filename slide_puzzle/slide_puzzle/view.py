@@ -70,6 +70,8 @@ class GraphicalView(object):
             settings.TILE_COLOR,
             solve_button_coords)
         self._event_manager.post(events.SetResetRect(self._reset_rect))
+        self._event_manager.post(events.SetSolveRect(self._solve_rect))
+        self._event_manager.post(events.SetNewGameRect(self._new_rect))
 
     def render_all(self):
         if not self._is_initialized:
