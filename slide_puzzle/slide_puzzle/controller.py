@@ -56,12 +56,15 @@ class Controller(object):
             return constants.RIGHT
 
     def _handle_click_event(self, event):
+        self._check_button_clicked(event)
         x, y = event.pos
+        click_coords = coords.PixelCoords(x, y)
+        self._event_manager.post(events.ClickEvent(click_coords))
+
+    def _check_button_clicked(self, event):
         if self._reset_rect.collidepoint(event.pos):
             self._event_manager.post(events.ResetEvent())
         elif self._solve_rect.collidepoint(event.pos):
             self._event_manager.post(events.SolveEvent())
         elif self._new_game_rect.collidepoint(event.pos):
             self._event_manager.post(events.NewGameEvent())
-        click_coords = coords.PixelCoords(x, y)
-        self._event_manager.post(events.ClickEvent(click_coords))
