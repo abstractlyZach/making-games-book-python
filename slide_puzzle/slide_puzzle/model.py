@@ -27,6 +27,7 @@ class Model(object):
         self._event_manager.register_listener(self)
         self._running = False
         self._clock = pygame.time.Clock()
+        self._solved_board = board.Board()
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -59,6 +60,10 @@ class Model(object):
         if not self._board.sliding and len(self._move_queue) > 0:
             move = self._move_queue.pop(0)
             self._start_move(move)
+        if self._board == self._solved_board:
+            self._is_solved = True
+        else:
+            self._is_solved = False
 
     def _handle_move_event(self, event):
         self._move_queue.append(event)
@@ -104,6 +109,7 @@ class Model(object):
         self._puzzle_move_history = list()
         self._player_move_history = list()
         self._move_queue = list()
+        self._is_solved = False
         self.shuffle_tiles()
 
     def shuffle_tiles(self):
@@ -136,3 +142,6 @@ class Model(object):
         self._player_move_history = list()
         self._puzzle_move_history = list()
 
+    @property
+    def is_solved(self):
+        return self._is_solved

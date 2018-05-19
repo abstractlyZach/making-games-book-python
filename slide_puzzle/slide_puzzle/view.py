@@ -43,6 +43,7 @@ class GraphicalView(object):
             self._BASIC_FONT
         )
         self._create_buttons()
+        self._create_message_box()
 
     def _create_buttons(self):
         reset_button_coords = coords.PixelCoords(
@@ -73,6 +74,13 @@ class GraphicalView(object):
         self._event_manager.post(events.SetSolveRect(self._solve_rect))
         self._event_manager.post(events.SetNewGameRect(self._new_rect))
 
+    def _create_message_box(self):
+        self._message_box, self._message_rect = self.makeText(
+            'Solved!',
+            settings.MESSAGE_COLOR,
+            settings.BG_COLOR,
+            coords.PixelCoords(5, 5)
+        )
     def render_all(self):
         if not self._is_initialized:
             return
@@ -81,6 +89,8 @@ class GraphicalView(object):
         self._display_surface.blit(self._reset_surf, self._reset_rect)
         self._display_surface.blit(self._solve_surf, self._solve_rect)
         self._display_surface.blit(self._new_surf, self._new_rect)
+        if self._model.is_solved:
+            self._display_surface.blit(self._message_box, self._message_rect)
         self._board_view.render()
         pygame.display.update()
 

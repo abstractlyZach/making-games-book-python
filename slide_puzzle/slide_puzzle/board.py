@@ -96,3 +96,12 @@ class Board(object):
         copied_board = copy.deepcopy(self._board)
         return Board(board= copied_board)
 
+    def __eq__(self, other):
+        tiles_are_same = list()
+        for coord in coords.get_all_tile_coords():
+            own_tile = self.get_tile(coord)
+            other_tile = other.get_tile(coord)
+            tiles_are_same.append(own_tile == other_tile)
+        return all(tiles_are_same)
+
+

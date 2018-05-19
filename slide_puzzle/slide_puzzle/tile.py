@@ -55,3 +55,6 @@ class Tile(object):
 
     def __repr__(self):
         return f'Tile({self._number})'
+
+    def __eq__(self, other):
+        return other.number == self._number
