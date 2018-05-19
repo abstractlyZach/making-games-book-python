@@ -55,17 +55,17 @@ class GraphicalView(object):
             settings.WINDOW_WIDTH - 120,
             settings.WINDOW_HEIGHT - 30)
         self._reset_surf, self._reset_rect = self.makeText(
-            'Reset',
+            '(R)eset',
             settings.TEXT_COLOR,
             settings.TILE_COLOR,
             reset_button_coords)
         self._new_surf, self._new_rect = self.makeText(
-            'New Game',
+            '(N)ew Game',
             settings.TEXT_COLOR,
             settings.TILE_COLOR,
             new_game_button_coords)
         self._solve_surf, self._solve_rect = self.makeText(
-            'Solve',
+            '(S)olve',
             settings.TEXT_COLOR,
             settings.TILE_COLOR,
             solve_button_coords)
