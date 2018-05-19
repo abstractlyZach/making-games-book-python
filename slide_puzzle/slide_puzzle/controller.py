@@ -1,6 +1,7 @@
 import pygame
 
 from . import events
+from . import settings
 from . import coords
 from . import constants
 
@@ -65,7 +66,9 @@ class Controller(object):
         self._check_button_clicked(event)
         x, y = event.pos
         click_coords = coords.PixelCoords(x, y)
-        self._event_manager.post(events.ClickEvent(click_coords))
+        tile_clicked = self.get_tile_clicked(click_coords)
+        if tile_clicked is not None:
+            self._event_manager.post(events.ClickEvent(tile_clicked))
 
     def _check_button_clicked(self, event):
         if self._reset_rect.collidepoint(event.pos):
@@ -74,3 +77,14 @@ class Controller(object):
             self._event_manager.post(events.SolveEvent())
         elif self._new_game_rect.collidepoint(event.pos):
             self._event_manager.post(events.NewGameEvent())
+
+    def get_tile_clicked(self, coord):
+        for tile_coord in coords.get_all_tile_coords():
+            top_left_of_tile = coords.top_left_coord_of_tile(tile_coord)
+            within_x_bounds = coord.pixel_x > top_left_of_tile.pixel_x and \
+                coord.pixel_x < top_left_of_tile.pixel_x + settings.TILE_SIZE
+            within_y_bounds = coord.pixel_y > top_left_of_tile.pixel_y and \
+                coord.pixel_y < top_left_of_tile.pixel_y + settings.TILE_SIZE
+            if within_x_bounds and within_y_bounds:
+                return tile_coord
+        return None

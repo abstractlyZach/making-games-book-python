@@ -110,7 +110,7 @@ class Model(object):
         self._player_move_history = list()
         self._move_queue = list()
         self._is_solved = False
-        self.shuffle_tiles()
+        # self.shuffle_tiles()
 
     def shuffle_tiles(self):
         copied_board = self._board.copy()
