@@ -77,7 +77,7 @@ class GraphicalView(object):
         if not self._is_initialized:
             return
         # clear display
-        self._display_surface.fill((0, 0, 0))
+        self._display_surface.fill(settings.BG_COLOR)
         self._display_surface.blit(self._reset_surf, self._reset_rect)
         self._display_surface.blit(self._solve_surf, self._solve_rect)
         self._display_surface.blit(self._new_surf, self._new_rect)
