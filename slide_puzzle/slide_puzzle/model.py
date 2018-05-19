@@ -54,6 +54,8 @@ class Model(object):
             self.solve()
         elif isinstance(event, events.NewGameEvent):
             self.new_game()
+        elif isinstance(event, events.ClickEvent):
+            self._handle_click(event.position)
 
     def _handle_tick(self):
         self._board.update()
@@ -67,6 +69,28 @@ class Model(object):
 
     def _handle_move_event(self, event):
         self._move_queue.append(event)
+
+    def _handle_click(self, tile_coord):
+        blank_tile_coord = self._board.get_blank_tile_coord()
+        if tile_coord.is_next_to(blank_tile_coord):
+            move = self._determine_move_direction(tile_coord)
+            self._event_manager.post(events.MoveEvent(move))
+
+    def _determine_move_direction(self, coord):
+        """Figure out what direction to move to put this into the blank tile
+        spot"""
+        blank_tile_coord = self._board.get_blank_tile_coord()
+        if coord.tile_x + 1 == blank_tile_coord.tile_x:
+            return constants.RIGHT
+        elif coord.tile_x - 1 == blank_tile_coord.tile_x:
+            return constants.LEFT
+        elif coord.tile_y + 1 == blank_tile_coord.tile_y:
+            return constants.DOWN
+        elif coord.tile_y - 1 == blank_tile_coord.tile_y:
+            return constants.UP
+        else:
+            raise Exception('Tried to determine move direction of a tile '
+                            "that's not next to the blank tile.")
 
     def _start_move(self, move_event):
         direction = move_event.direction

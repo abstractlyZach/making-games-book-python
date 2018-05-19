@@ -75,10 +75,11 @@ class TileCoords(object):
                                        'bounds.'.format((self._x, self._y)))
 
     def is_next_to(self, other):
-        other._check_tile_is_in_bounds()
-        x_adjacent = abs(self.tile_x - other.tile_x)
-        y_adjacent = abs(self.tile_y - other.tile_y)
-        return (x_adjacent or y_adjacent) and not (x_adjacent and y_adjacent)
+        x_adjacent = abs(self.tile_x - other.tile_x) == 1 \
+                     and self.tile_y == other.tile_y
+        y_adjacent = abs(self.tile_y - other.tile_y) == 1 \
+                     and self.tile_x == other.tile_x
+        return x_adjacent or y_adjacent
 
     @property
     def tile_x(self):
