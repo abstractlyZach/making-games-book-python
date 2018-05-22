@@ -1,9 +1,9 @@
 import logging
 
-from mvc import eventmanager
-from mvc import model
-from mvc import view
-from mvc import controller
+from simon import eventmanager
+from simon import model
+from simon import view
+from simon import controller
 
 
 def set_up_logging():
