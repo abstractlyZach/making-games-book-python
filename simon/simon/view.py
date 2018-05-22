@@ -1,7 +1,7 @@
-import logging
 import pygame
 
 from . import events
+from . import settings
 
 
 class GraphicalView(object):
@@ -45,7 +45,8 @@ class GraphicalView(object):
         pygame.init()
         pygame.font.init()
         pygame.display.set_caption('Simon')
-        self._screen = pygame.display.set_mode((600, 60))
+        self._screen = pygame.display.set_mode(
+            (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
+        )
         self._small_font = pygame.font.Font(None, 40)
         self._is_initialized = True
-        logging.info('VIEW INITIALIZED')
