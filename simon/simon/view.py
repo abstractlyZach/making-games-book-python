@@ -44,7 +44,7 @@ class GraphicalView(object):
         """Set up the pygame graphical display and load graphical resources."""
         pygame.init()
         pygame.font.init()
-        pygame.display.set_caption('demo game')
+        pygame.display.set_caption('Simon')
         self._screen = pygame.display.set_mode((600, 60))
         self._small_font = pygame.font.Font(None, 40)
         self._is_initialized = True
