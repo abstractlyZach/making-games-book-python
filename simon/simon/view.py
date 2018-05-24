@@ -1,5 +1,6 @@
 import pygame
 
+from . import constants
 from . import events
 from . import settings
 
@@ -38,6 +39,7 @@ class GraphicalView(object):
             (0, 255, 0)
         )
         self._screen.blit(some_words, (0, 0))
+        self._draw_buttons()
         pygame.display.update()
 
     def initialize(self):
@@ -50,3 +52,34 @@ class GraphicalView(object):
         )
         self._small_font = pygame.font.Font(None, 40)
         self._is_initialized = True
+        self._yellow_rect = pygame.Rect(
+            settings.X_MARGIN,
+            settings.Y_MARGIN,
+            settings.BUTTON_SIZE,
+            settings.BUTTON_SIZE
+        )
+        self._blue_rect = pygame.Rect(
+            settings.X_MARGIN+settings.BUTTON_SIZE+settings.BUTTON_GAP_SIZE,
+            settings.Y_MARGIN,
+            settings.BUTTON_SIZE,
+            settings.BUTTON_SIZE
+        )
+        self._red_rect = pygame.Rect(
+            settings.X_MARGIN,
+            settings.Y_MARGIN+settings.BUTTON_SIZE+settings.BUTTON_GAP_SIZE,
+            settings.BUTTON_SIZE,
+            settings.BUTTON_SIZE
+        )
+        self._green_rect = pygame.Rect(
+            settings.X_MARGIN+settings.BUTTON_SIZE+settings.BUTTON_GAP_SIZE,
+            settings.Y_MARGIN+settings.BUTTON_SIZE+settings.BUTTON_GAP_SIZE,
+            settings.BUTTON_SIZE,
+            settings.BUTTON_SIZE
+        )
+
+    def _draw_buttons(self):
+        pygame.draw.rect(self._screen, constants.YELLOW, self._yellow_rect)
+        pygame.draw.rect(self._screen, constants.BLUE, self._blue_rect)
+        pygame.draw.rect(self._screen, constants.RED, self._red_rect)
+        pygame.draw.rect(self._screen, constants.GREEN, self._green_rect)
+
