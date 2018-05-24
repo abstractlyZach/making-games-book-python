@@ -1,3 +1,6 @@
+from . import constants
+
+
 FPS = 30
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
@@ -9,3 +12,5 @@ TIMEOUT = 4 # seconds before game over if no button is pushed.
 
 X_MARGIN = int((WINDOW_WIDTH - (2 * BUTTON_SIZE) - BUTTON_GAP_SIZE) / 2)
 Y_MARGIN = int((WINDOW_HEIGHT - (2 * BUTTON_SIZE) - BUTTON_GAP_SIZE) / 2)
+
+BG_COLOR = constants.BLACK
