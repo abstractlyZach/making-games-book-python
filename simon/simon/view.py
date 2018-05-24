@@ -33,12 +33,6 @@ class GraphicalView(object):
             return
         # clear display
         self._screen.fill(settings.BG_COLOR)
-        some_words = self._small_font.render(
-            self._model.text,
-            True,
-            (0, 255, 0)
-        )
-        self._screen.blit(some_words, (0, 0))
         self._draw_buttons()
         pygame.display.update()
 
