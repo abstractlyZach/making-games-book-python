@@ -4,6 +4,7 @@ from simon import eventmanager
 from simon import model
 from simon import view
 from simon import controller
+from simon import soundboard
 
 
 def set_up_logging():
@@ -22,6 +23,8 @@ def main():
                                      input_event_manager,
                                      game_model)
     graphics = view.GraphicalView(main_event_manager, game_model)
+    # create the soundboard
+    sound_board = soundboard.SoundBoard(main_event_manager)
     # start the game
     game_model.run()
 

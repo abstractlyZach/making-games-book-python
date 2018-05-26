@@ -55,5 +55,12 @@ class ClickEvent(InputEvent):
     def __str__(self):
         return '{}: {}'.format(self._name, self._position)
 
+class SoundEvent(Event):
+    def __init__(self, id):
+        self._id = id
+        self._name = f'Sound Event: {id}'
 
+    @property
+    def id(self):
+        return self._id
 

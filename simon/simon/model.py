@@ -4,6 +4,7 @@ from . import events
 from . import settings
 from . import board
 from . import constants
+from simon import soundboard
 
 
 class Model(object):
@@ -22,6 +23,7 @@ class Model(object):
         elif isinstance(event, events.ClickEvent):
             self._board.get_button(constants.GREEN).flash()
             self._board.get_button(constants.BLUE).flash()
+            self._main_event_manager.post(events.SoundEvent(1))
         elif isinstance(event, events.TickEvent):
             self._board.update()
 
