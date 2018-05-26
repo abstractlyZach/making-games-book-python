@@ -1,5 +1,6 @@
 
 import enum
+from . import settings
 
 class ButtonState(enum.Enum):
     BRIGHTENING = 0
@@ -13,9 +14,39 @@ class Button(object):
         self._original_color = original_color
         self._flash_color = flash_color
         self._state = ButtonState.IDLE
+        self._brightness_alpha = 0
+
+    @property
+    def original_color(self):
+        return self._original_color
+
+    @property
+    def flash_color(self):
+        return self._flash_color
+
+    @property
+    def brightness_alpha(self):
+        return self._brightness_alpha
+
+    def flash(self):
+        self._state = ButtonState.BRIGHTENING
 
     def update(self):
         if self._state is ButtonState.DARKENING:
-            pass
+            self._darken()
         elif self._state is ButtonState.BRIGHTENING:
-            pass
+            self._brighten()
+
+    def _darken(self):
+        self._brightness_alpha -= settings.ANIMATION_SPEED
+        if self._brightness_alpha <= 0:
+            self._brightness_alpha = 0
+            self._state = ButtonState.IDLE
+
+    def _brighten(self):
+        self._brightness_alpha += settings.ANIMATION_SPEED
+        if self._brightness_alpha >= 255:
+            self._brightness_alpha = 255
+            self._state = ButtonState.DARKENING
+
+
