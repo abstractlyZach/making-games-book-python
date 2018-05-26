@@ -9,6 +9,7 @@ class GraphicalView(object):
     """Draws the model's state to the screen."""
     def __init__(self, main_event_manager, model):
         main_event_manager.register_listener(self)
+        self._main_event_manager = main_event_manager
         self._model = model
         self._is_initialized = False
         self._screen = None
@@ -68,6 +69,18 @@ class GraphicalView(object):
             settings.Y_MARGIN+settings.BUTTON_SIZE+settings.BUTTON_GAP_SIZE,
             settings.BUTTON_SIZE,
             settings.BUTTON_SIZE
+        )
+        self._main_event_manager.post(
+            events.SetRectEvent(constants.BLUE, self._blue_rect)
+        )
+        self._main_event_manager.post(
+            events.SetRectEvent(constants.YELLOW, self._yellow_rect)
+        )
+        self._main_event_manager.post(
+            events.SetRectEvent(constants.GREEN, self._green_rect)
+        )
+        self._main_event_manager.post(
+            events.SetRectEvent(constants.RED, self._red_rect)
         )
 
     def _draw_buttons(self):

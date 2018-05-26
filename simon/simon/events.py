@@ -1,4 +1,5 @@
 import pygame
+from . import constants
 
 
 class Event(object):
@@ -63,4 +64,29 @@ class SoundEvent(Event):
     @property
     def id(self):
         return self._id
+
+class SetRectEvent(Event):
+    def __init__(self, color, rect):
+        self._color = color
+        self._rect = rect
+        self._name = f'Set {constants.COLOR_NAMES[color]} rect at {rect}.'
+
+    @property
+    def color(self):
+        return self._color
+
+    @property
+    def rect(self):
+        return self._rect
+
+
+class ButtonPressEvent(Event):
+    def __init__(self, color):
+        self._color = color
+        self._name = f'{constants.COLOR_NAMES[color].capitalize()} ' \
+                     f'button pressed.'
+
+    @property
+    def color(self):
+        return self._color
 

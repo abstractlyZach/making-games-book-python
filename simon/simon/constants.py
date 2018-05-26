@@ -12,3 +12,8 @@ YELLOW        = (155, 155,   0)
 DARK_GRAY     = ( 40,  40,  40)
 
 BASIC_COLORS = [YELLOW, RED, BLUE, GREEN]
+
+COLOR_NAMES = {YELLOW: 'yellow',
+               GREEN: 'green',
+               RED: 'red',
+               BLUE: 'blue'}
