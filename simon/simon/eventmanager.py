@@ -4,10 +4,13 @@ import weakref
 from . import events
 
 
+EVENTS_NOT_TO_LOG = [events.TickEvent, events.SoundEvent]
 def should_be_logged(event):
     """Returns True if the event should be logged."""
-    if not isinstance(event, events.TickEvent):
-        return True
+    for bad_event in EVENTS_NOT_TO_LOG:
+        if isinstance(event, bad_event):
+            return False
+    return True
 
 class EventManager(object):
     """Coordinates communication between model, view, and controller."""
