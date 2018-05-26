@@ -23,14 +23,31 @@ class Controller(object):
     def _handle_input_event(self, event):
         if event.type == pygame.QUIT:
             self._input_event_manager.post(events.QuitEvent())
-        elif (event.type == pygame.KEYUP) and \
-                (event.key == pygame.K_ESCAPE):
-            self._input_event_manager.post(events.QuitEvent())
-        elif (event.type == pygame.KEYUP):
-            self._input_event_manager.post(events.KeyPressEvent(event.key))
+        elif event.type == pygame.KEYUP:
+            self._handle_keypress_event(event.key)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
             self._handle_click_event(x, y)
+
+    def _handle_keypress_event(self, key):
+        if key == pygame.K_ESCAPE:
+            self._input_event_manager.post(events.QuitEvent())
+        elif key == pygame.K_q:
+            self._input_event_manager.post(
+                events.ButtonPressEvent(constants.YELLOW)
+            )
+        elif key == pygame.K_w:
+            self._input_event_manager.post(
+                events.ButtonPressEvent(constants.BLUE)
+            )
+        elif key == pygame.K_a:
+            self._input_event_manager.post(
+                events.ButtonPressEvent(constants.RED)
+            )
+        elif key == pygame.K_s:
+            self._input_event_manager.post(
+                events.ButtonPressEvent(constants.GREEN)
+            )
 
     def _handle_set_rect_event(self, event):
         self._boxes[event.color] = event.rect
