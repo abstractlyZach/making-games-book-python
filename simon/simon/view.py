@@ -27,7 +27,6 @@ class GraphicalView(object):
         # ends the pygame graphical display
         pygame.quit()
 
-
     def render_all(self):
         if not self._is_initialized:
             return
@@ -76,4 +75,19 @@ class GraphicalView(object):
         pygame.draw.rect(self._screen, constants.BLUE, self._blue_rect)
         pygame.draw.rect(self._screen, constants.RED, self._red_rect)
         pygame.draw.rect(self._screen, constants.GREEN, self._green_rect)
+        for button in self._model.get_flashing_buttons():
+            if button.original_color == constants.GREEN:
+                target_rect = self._green_rect
+            elif button.original_color == constants.YELLOW:
+                target_rect = self._yellow_rect
+            elif button.original_color == constants.RED:
+                target_rect = self._red_rect
+            elif button.original_color == constants.BLUE:
+                target_rect = self._blue_rect
+            flash_surf = pygame.Surface(
+                (settings.BUTTON_SIZE, settings.BUTTON_SIZE)
+            )
+            flash_surf = flash_surf.convert_alpha()
+            flash_surf.fill((*button.flash_color, button.brightness_alpha))
+            self._screen.blit(flash_surf, target_rect.topleft)
 

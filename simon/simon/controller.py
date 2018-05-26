@@ -24,5 +24,7 @@ class Controller(object):
             self._input_event_manager.post(events.QuitEvent())
         elif (event.type == pygame.KEYUP):
             self._input_event_manager.post(events.KeyPressEvent(event.key))
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            self._input_event_manager.post(events.ClickEvent('here'))
 
 

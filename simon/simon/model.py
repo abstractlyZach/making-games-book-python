@@ -2,6 +2,8 @@ import pygame
 
 from . import events
 from . import settings
+from . import board
+from . import constants
 
 
 class Model(object):
@@ -12,10 +14,16 @@ class Model(object):
         input_event_manager.register_listener(self)
         self._running = False
         self._clock = pygame.time.Clock()
+        self._board = board.Board()
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
+        elif isinstance(event, events.ClickEvent):
+            self._board.get_button(constants.GREEN).flash()
+            self._board.get_button(constants.BLUE).flash()
+        elif isinstance(event, events.TickEvent):
+            self._board.update()
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -27,3 +35,10 @@ class Model(object):
             self._main_event_manager.post(tick)
             self._clock.tick(settings.FPS)
 
+    def get_flashing_buttons(self):
+        flashing_buttons = list()
+        for color in constants.BASIC_COLORS:
+            button = self._board.get_button(color)
+            if button.is_flashing:
+                flashing_buttons.append(button)
+        return flashing_buttons

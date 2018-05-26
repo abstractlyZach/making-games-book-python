@@ -25,6 +25,11 @@ class Button(object):
         return self._flash_color
 
     @property
+    def is_flashing(self):
+        return self._state is ButtonState.BRIGHTENING or \
+            self._state is ButtonState.DARKENING
+
+    @property
     def brightness_alpha(self):
         return self._brightness_alpha
 
