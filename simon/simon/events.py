@@ -48,14 +48,6 @@ class KeyPressEvent(InputEvent):
         return self._key
 
 
-class ClickEvent(InputEvent):
-    def __init__(self, position):
-        self._name = 'Click Event'
-        self._position = position
-
-    def __str__(self):
-        return '{}: {}'.format(self._name, self._position)
-
 class SoundEvent(Event):
     def __init__(self, id):
         self._id = id

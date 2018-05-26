@@ -20,10 +20,6 @@ class Model(object):
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
-        elif isinstance(event, events.ClickEvent):
-            self._board.get_button(constants.GREEN).flash()
-            self._board.get_button(constants.BLUE).flash()
-            self._main_event_manager.post(events.SoundEvent(1))
         elif isinstance(event, events.TickEvent):
             self._board.update()
 
