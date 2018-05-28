@@ -22,6 +22,8 @@ class Model(object):
             self._running = False
         elif isinstance(event, events.TickEvent):
             self._board.update()
+        elif isinstance(event, events.ButtonPressEvent):
+            self.flash(event.color)
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -32,6 +34,13 @@ class Model(object):
             tick = events.TickEvent()
             self._main_event_manager.post(tick)
             self._clock.tick(settings.FPS)
+
+    def flash(self, color):
+        """Handle the details of doing a flash."""
+        self._board.flash(color)
+        color_index = constants.BASIC_COLORS.index(color)
+        self._main_event_manager.post(events.SoundEvent(color_index))
+
 
     def get_flashing_buttons(self):
         flashing_buttons = list()

@@ -19,3 +19,7 @@ class Board(object):
     def update(self):
         for button in self._buttons:
             button.update()
+
+    def flash(self, color):
+        button = self.get_button(color)
+        button.flash()
