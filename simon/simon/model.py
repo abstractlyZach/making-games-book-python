@@ -16,14 +16,19 @@ class Model(object):
         self._running = False
         self._clock = pygame.time.Clock()
         self._board = board.Board()
+        self._sequence = list()
+        self._awaiting_input = False
+        self._flash_queue = list()
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
         elif isinstance(event, events.TickEvent):
-            self._board.update()
+            self._update()
         elif isinstance(event, events.ButtonPressEvent):
-            self.flash(event.color)
+            # self.flash(event.color)
+            self._sequence.append(event.color)
+            self.play_sequence()
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -49,3 +54,21 @@ class Model(object):
             if button.is_flashing:
                 flashing_buttons.append(button)
         return flashing_buttons
+
+    def play_sequence(self):
+        for button_color in self._sequence:
+            self._flash_queue.append(button_color)
+
+    def _update(self):
+        self._board.update()
+        if self._awaiting_input:
+            pass
+        elif len(self._flash_queue) > 0:
+            time_since_last_flash = self._board.time_since_last_flash
+            if time_since_last_flash is not None:
+                is_time_to_flash = time_since_last_flash >= settings.FLASH_DELAY
+                if is_time_to_flash:
+                    button_color = self._flash_queue.pop(0)
+                    self.flash(button_color)
+
+
