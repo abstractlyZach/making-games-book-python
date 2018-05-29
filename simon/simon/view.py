@@ -32,7 +32,7 @@ class GraphicalView(object):
         if not self._is_initialized:
             return
         # clear display
-        self._screen.fill(settings.BG_COLOR)
+        self._draw_background()
         self._screen.blit(self._info_surf, self._info_rect)
         self._draw_score_counter()
         self._draw_buttons()
@@ -124,3 +124,8 @@ class GraphicalView(object):
         score_rect.topleft = (settings.WINDOW_WIDTH - 100, 10)
         self._screen.blit(score_surface, score_rect)
 
+    def _draw_background(self):
+        if self._model.waiting_for_next_round:
+            self._screen.fill(constants.WHITE)
+        else:
+            self._screen.fill(settings.BG_COLOR)

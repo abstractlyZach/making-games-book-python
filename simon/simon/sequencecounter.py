@@ -7,6 +7,10 @@ class SequenceCounter(object):
     def started(self):
         return self._started
 
+    @property
+    def count(self):
+        return self._count
+
     def reset(self):
         self._started = False
         self._count = -1
