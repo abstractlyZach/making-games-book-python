@@ -13,7 +13,7 @@ class GraphicalView(object):
         self._model = model
         self._is_initialized = False
         self._screen = None
-        self._small_font = None
+        self._basic_font = None
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -33,6 +33,8 @@ class GraphicalView(object):
             return
         # clear display
         self._screen.fill(settings.BG_COLOR)
+        self._screen.blit(self._info_surf, self._info_rect)
+        self._draw_score_counter()
         self._draw_buttons()
         pygame.display.update()
 
@@ -44,7 +46,15 @@ class GraphicalView(object):
         self._screen = pygame.display.set_mode(
             (settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
         )
-        self._small_font = pygame.font.Font(None, 40)
+        self._basic_font = pygame.font.Font('freesansbold.ttf', 16)
+        self._info_surf = self._basic_font.render(
+            'Match the pattern by clicking on the button or using the '
+            'Q, W, A, S keys.',
+            1,
+            constants.DARK_GRAY
+        )
+        self._info_rect = self._info_surf.get_rect()
+        self._info_rect.topleft = (10, settings.WINDOW_HEIGHT - 25)
         self._is_initialized = True
         self._yellow_rect = pygame.Rect(
             settings.X_MARGIN,
@@ -103,4 +113,14 @@ class GraphicalView(object):
             flash_surf = flash_surf.convert_alpha()
             flash_surf.fill((*button.flash_color, button.brightness_alpha))
             self._screen.blit(flash_surf, target_rect.topleft)
+
+    def _draw_score_counter(self):
+        score_surface = self._basic_font.render(
+            f'Score: {self._model.score}',
+            1,
+            constants.WHITE
+        )
+        score_rect = score_surface.get_rect()
+        score_rect.topleft = (settings.WINDOW_WIDTH - 100, 10)
+        self._screen.blit(score_surface, score_rect)
 

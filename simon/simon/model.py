@@ -19,6 +19,7 @@ class Model(object):
         self._sequence = list()
         self._awaiting_input = False
         self._flash_queue = list()
+        self._score = 0
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -26,9 +27,9 @@ class Model(object):
         elif isinstance(event, events.TickEvent):
             self._update()
         elif isinstance(event, events.ButtonPressEvent):
-            # self.flash(event.color)
-            self._sequence.append(event.color)
-            self.play_sequence()
+            if self._awaiting_input:
+                self.flash(event.color)
+                self._sequence.append(event.color)
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -71,4 +72,7 @@ class Model(object):
                     button_color = self._flash_queue.pop(0)
                     self.flash(button_color)
 
+    @property
+    def score(self):
+        return self._score
 
