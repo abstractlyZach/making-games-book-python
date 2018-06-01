@@ -13,8 +13,14 @@ class GameState(object):
 class Idle(GameState):
     pass
 
+
 class WaitingForInput(GameState):
     pass
 
+
 class PlayingSequence(GameState):
+    pass
+
+
+class GameOver(GameState):
     pass

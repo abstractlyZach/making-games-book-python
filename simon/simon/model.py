@@ -99,8 +99,8 @@ class Model(object):
                 self._game_state = gamestate.WaitingForInput()
 
     def _player_loses(self):
-        logging.info('LOSER')
-        self._game_state = None
+        logging.info('Game Over!')
+        self._game_state = gamestate.GameOver()
 
     def _attempt_next_flash(self):
         time_since_last_flash = self._board.time_since_last_flash

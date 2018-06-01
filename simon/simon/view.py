@@ -135,5 +135,8 @@ class GraphicalView(object):
         elif isinstance(game_state, gamestate.WaitingForInput) and \
                 game_state.time_elapsed <= .5:
             self._screen.fill(constants.PASTEL_YELLOW)
+
+        elif isinstance(game_state, gamestate.GameOver):
+            self._screen.fill(constants.BRIGHT_RED)
         else:
             self._screen.fill(settings.BG_COLOR)
