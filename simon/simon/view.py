@@ -129,11 +129,11 @@ class GraphicalView(object):
         game_state = self._model.game_state
         if isinstance(game_state, gamestate.Idle) and \
             game_state.time_elapsed >= .5:
-            self._screen.fill(constants.WHITE)
+            self._screen.fill(constants.PASTEL_YELLOW)
         elif isinstance(game_state, gamestate.PlayingSequence):
-            self._screen.fill(constants.WHITE)
+            self._screen.fill(constants.PASTEL_YELLOW)
         elif isinstance(game_state, gamestate.WaitingForInput) and \
                 game_state.time_elapsed <= .5:
-            self._screen.fill(constants.WHITE)
+            self._screen.fill(constants.PASTEL_YELLOW)
         else:
             self._screen.fill(settings.BG_COLOR)

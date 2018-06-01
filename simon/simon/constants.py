@@ -11,6 +11,8 @@ BRIGHT_YELLOW = (255, 255,   0)
 YELLOW        = (155, 155,   0)
 DARK_GRAY     = ( 40,  40,  40)
 
+PASTEL_YELLOW = (220, 210,   0)
+
 BASIC_COLORS = [YELLOW, RED, BLUE, GREEN]
 
 COLOR_NAMES = {YELLOW: 'yellow',
