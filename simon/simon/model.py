@@ -21,9 +21,7 @@ class Model(object):
         self._running = False
         self._clock = pygame.time.Clock()
         self._board = board.Board()
-        self._sequence = list()
         self._flash_queue = list()
-        self._score = 0
         self._sequence_counter = sequencecounter.SequenceCounter()
         self._time_of_last_round = time.time()
         self._last_press_time = 0
@@ -41,8 +39,11 @@ class Model(object):
         elif isinstance(event, events.ButtonPressEvent):
             if isinstance(self._game_state, gamestate.WaitingForInput):
                 self._handle_button_press(event.color)
+            elif isinstance(self._game_state, gamestate.GameOver):
+                if self._game_state.time_elapsed >= 1:
+                    self._new_game()
         elif isinstance(event, events.InitializeEvent):
-            self._new_round()
+            self._new_game()
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
@@ -72,6 +73,12 @@ class Model(object):
     def play_sequence(self):
         for button_color in self._sequence:
             self._flash_queue.append(button_color)
+
+    def _new_game(self):
+        self._game_state = gamestate.PlayingSequence()
+        self._sequence = list()
+        self._score = 0
+        self._new_round()
 
     def _new_round(self):
         self._game_state = gamestate.PlayingSequence()
