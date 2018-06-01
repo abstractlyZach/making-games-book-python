@@ -4,6 +4,7 @@ from . import settings
 from . import events
 from . import coords
 from . import boardview
+from . import photo_boardview
 
 from slide_puzzle import events
 
@@ -37,7 +38,7 @@ class GraphicalView(object):
         self._is_initialized = True
         self._BASIC_FONT = pygame.font.Font('freesansbold.ttf',
                                       settings.BASIC_FONT_SIZE)
-        self._board_view = boardview.BoardView(
+        self._board_view = photo_boardview.PhotoBoardView(
             self._display_surface,
             self._model,
             self._BASIC_FONT
