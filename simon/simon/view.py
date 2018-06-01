@@ -2,6 +2,7 @@ import pygame
 
 from . import constants
 from . import events
+from . import gamestate
 from . import settings
 
 
@@ -125,7 +126,14 @@ class GraphicalView(object):
         self._screen.blit(score_surface, score_rect)
 
     def _draw_background(self):
-        if self._model.waiting_for_next_round:
+        game_state = self._model.game_state
+        if isinstance(game_state, gamestate.Idle) and \
+            game_state.time_elapsed >= .5:
+            self._screen.fill(constants.WHITE)
+        elif isinstance(game_state, gamestate.PlayingSequence):
+            self._screen.fill(constants.WHITE)
+        elif isinstance(game_state, gamestate.WaitingForInput) and \
+                game_state.time_elapsed <= .5:
             self._screen.fill(constants.WHITE)
         else:
             self._screen.fill(settings.BG_COLOR)

@@ -1,12 +1,14 @@
+import enum
 import logging
 import pygame
 import random
 import time
 
-from . import events
-from . import settings
 from . import board
 from . import constants
+from . import events
+from . import gamestate
+from . import settings
 from . import sequencecounter
 
 
@@ -20,12 +22,16 @@ class Model(object):
         self._clock = pygame.time.Clock()
         self._board = board.Board()
         self._sequence = list()
-        self._awaiting_input = False
         self._flash_queue = list()
         self._score = 0
         self._sequence_counter = sequencecounter.SequenceCounter()
         self._time_of_last_round = time.time()
         self._last_press_time = 0
+        self._game_state = None
+
+    @property
+    def game_state(self):
+        return self._game_state
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -33,7 +39,7 @@ class Model(object):
         elif isinstance(event, events.TickEvent):
             self._update()
         elif isinstance(event, events.ButtonPressEvent):
-            if self._awaiting_input:
+            if isinstance(self._game_state, gamestate.WaitingForInput):
                 self._handle_button_press(event.color)
         elif isinstance(event, events.InitializeEvent):
             self._new_round()
@@ -68,7 +74,7 @@ class Model(object):
             self._flash_queue.append(button_color)
 
     def _new_round(self):
-        self._awaiting_input = False
+        self._game_state = gamestate.PlayingSequence()
         new_color = random.choice(constants.BASIC_COLORS)
         self._sequence.append(new_color)
         self._sequence_counter.reset()
@@ -76,24 +82,25 @@ class Model(object):
 
     def _update(self):
         self._board.update()
-        if self._awaiting_input:
-            if not self.waiting_for_next_round:
-                reached_timeout = time.time() - self._last_press_time >= \
-                    settings.TIMEOUT
-                if self._sequence_counter.started and reached_timeout:
-                    self._player_loses()
-                elif self._sequence_counter.count == len(self._sequence) - 1:
-                    self._new_round()
+        if isinstance(self._game_state, gamestate.WaitingForInput):
+            reached_timeout = time.time() - self._last_press_time >= \
+                settings.TIMEOUT
+            if self._sequence_counter.started and reached_timeout:
+                self._player_loses()
+            elif self._sequence_counter.count == len(self._sequence) - 1:
+                self._game_state = gamestate.Idle()
+        elif isinstance(self._game_state, gamestate.Idle):
+            if self._game_state.time_elapsed >= 1:
+                self._new_round()
+        elif isinstance(self._game_state, gamestate.PlayingSequence):
+            if len(self._flash_queue) > 0:
+                self._attempt_next_flash()
             else:
-                pass
-        else:
-            if not self.waiting_for_next_round:
-                if len(self._flash_queue) > 0:
-                    self._attempt_next_flash()
+                self._game_state = gamestate.WaitingForInput()
 
     def _player_loses(self):
         logging.info('LOSER')
-        self._awaiting_input = False
+        self._game_state = None
 
     def _attempt_next_flash(self):
         time_since_last_flash = self._board.time_since_last_flash
@@ -102,8 +109,6 @@ class Model(object):
             if is_time_to_flash:
                 button_color = self._flash_queue.pop(0)
                 self.flash(button_color)
-                if len(self._flash_queue) <= 0:
-                    self._awaiting_input = True
 
     def _handle_button_press(self, color):
         self.flash(color)
@@ -116,7 +121,3 @@ class Model(object):
     @property
     def score(self):
         return self._score
-
-    @property
-    def waiting_for_next_round(self):
-        return time.time() - self._time_of_last_round < 1
