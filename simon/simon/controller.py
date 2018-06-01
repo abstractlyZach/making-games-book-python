@@ -50,14 +50,16 @@ class Controller(object):
             )
 
     def _handle_set_rect_event(self, event):
+        """Sets the controller's rectangle so that it knows where it is."""
         self._boxes[event.color] = event.rect
 
     def _handle_click_event(self, x, y):
         for color in constants.BASIC_COLORS:
-            if self._click_in_box(x, y, color):
+            if self._click_in_button(x, y, color):
                 self._input_event_manager.post(events.ButtonPressEvent(color))
 
-    def _click_in_box(self, click_x, click_y, color):
+    def _click_in_button(self, click_x, click_y, color):
+        """Return True if the click is in a button"""
         target_rect = self._boxes[color]
         return target_rect.collidepoint((click_x, click_y))
 
