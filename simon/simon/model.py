@@ -95,6 +95,7 @@ class Model(object):
             if self._sequence_counter.started and reached_timeout:
                 self._player_loses()
             elif self._sequence_counter.count == len(self._sequence) - 1:
+                self._score += 1
                 self._game_state = gamestate.Idle()
         elif isinstance(self._game_state, gamestate.Idle):
             if self._game_state.time_elapsed >= 1:
