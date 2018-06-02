@@ -29,16 +29,6 @@ class GraphicalView(object):
         # ends the pygame graphical display
         pygame.quit()
 
-    def render_all(self):
-        if not self._is_initialized:
-            return
-        # clear display
-        self._draw_background()
-        self._screen.blit(self._info_surf, self._info_rect)
-        self._draw_score_counter()
-        self._draw_buttons()
-        pygame.display.update()
-
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""
         pygame.init()
@@ -93,6 +83,16 @@ class GraphicalView(object):
         self._main_event_manager.post(
             events.SetRectEvent(constants.RED, self._red_rect)
         )
+
+    def render_all(self):
+        if not self._is_initialized:
+            return
+        # clear display
+        self._draw_background()
+        self._screen.blit(self._info_surf, self._info_rect)
+        self._draw_score_counter()
+        self._draw_buttons()
+        pygame.display.update()
 
     def _draw_buttons(self):
         pygame.draw.rect(self._screen, constants.YELLOW, self._yellow_rect)
