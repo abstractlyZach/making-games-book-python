@@ -1,9 +1,9 @@
 import logging
 
-from mvc import eventmanager
-from mvc import model
-from mvc import view
-from mvc import controller
+from wormy import eventmanager
+from wormy import model
+from wormy import view
+from wormy import controller
 
 
 def set_up_logging():

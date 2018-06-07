@@ -1,7 +1,7 @@
 from unittest import mock
 
-from mvc import eventmanager
-from mvc import events
+from wormy import eventmanager
+from wormy import events
 
 class ListenerSpy(object):
     def __init__(self):

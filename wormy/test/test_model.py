@@ -1,6 +1,6 @@
-from mvc import eventmanager
-from mvc import events
-from mvc import model
+from wormy import eventmanager
+from wormy import events
+from wormy import model
 
 class QuitsAfterFourTicks(object):
     """sends a quit event after 4 ticks"""

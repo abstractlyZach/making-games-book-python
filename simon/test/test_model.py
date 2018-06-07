@@ -1,6 +1,6 @@
-from mvc import eventmanager
-from mvc import events
-from mvc import model
+from simon import eventmanager
+from simon import events
+from simon import model
 
 class QuitsAfterFourTicks(object):
     """sends a quit event after 4 ticks"""

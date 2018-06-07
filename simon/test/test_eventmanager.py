@@ -1,7 +1,7 @@
 from unittest import mock
 
-from mvc import eventmanager
-from mvc import events
+from simon import eventmanager
+from simon import events
 
 class ListenerSpy(object):
     def __init__(self):
