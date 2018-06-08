@@ -3,8 +3,12 @@ from . import settings
 
 class Coordinates(object):
     def __init__(self, x, y):
-        self._x = x
-        self._y = y
+        if isinstance(x, int) and isinstance(y, int):
+            self._x = x
+            self._y = y
+        else:
+            raise Exception(f'({self._x}, {self._y}): should both be '
+                            f'integers.')
         self._check_in_bounds()
 
     def _check_in_bounds(self):
