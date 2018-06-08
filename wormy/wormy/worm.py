@@ -10,6 +10,7 @@ class Worm(object):
             coordinates.Coordinates(head_coord.x - 1, head_coord.y),
             coordinates.Coordinates(head_coord.x - 2, head_coord.y)
         ]
+        self._crashed = False
 
     def __len__(self):
         return len(self._body)
@@ -18,31 +19,35 @@ class Worm(object):
     def head_coord(self):
         return self._body[0]
 
+    @property
+    def crashed(self):
+        return self._crashed
+
     def move(self, direction):
+        if self._crashed:
+            raise Exception('Worm is crashed. Cannot make move.')
         self._move_head(direction)
-        self._body.pop(-1)
+        self._phantom_tail = self._body.pop(-1)
+        self._check_for_self_collision()
 
     def _move_head(self, direction):
-        x_delta = 0
-        y_delta = 0
-        if direction == constants.RIGHT:
-            x_delta = 1
-        elif direction == constants.LEFT:
-            x_delta = -1
-        elif direction == constants.UP:
-            y_delta = -1
-        elif direction == constants.DOWN:
-            y_delta = 1
-        else:
-            raise Exception(f'Invalid direction: {direction}')
-        current_head_coordinates = self._body[0]
-        new_head_coordinates = coordinates.Coordinates(
-            current_head_coordinates.x + x_delta,
-            current_head_coordinates.y + y_delta
+        new_head_coordinates = coordinates.coord_in_direction(
+            self.head_coord,
+            direction
         )
-        self._body.insert(0, new_head_coordinates)
+        if new_head_coordinates.is_in_bounds:
+            self._body.insert(0, new_head_coordinates)
+        else:
+            self._crashed = True
 
-    def move_and_eat_apple(self, direction):
-        self._move_head(direction)
+    def _check_for_self_collision(self):
+        for coord in self._body[1:]:
+            if self.head_coord == coord:
+                self._crashed = True
+
+    def eat_apple(self):
+        """Adds the tail back onto the worm. Should be triggered after the
+        worm eats an apple. Make sure this is triggered after it has moved."""
+        self._body.append(self._phantom_tail)
 
 
