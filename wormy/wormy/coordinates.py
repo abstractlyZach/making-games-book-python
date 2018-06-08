@@ -1,3 +1,5 @@
+import random
+
 from . import constants
 from . import settings
 
@@ -25,6 +27,22 @@ def deltas_for_direction(direction):
     else:
         raise Exception(f'Invalid direction: {direction}')
     return x_delta, y_delta
+
+
+def get_all_coords():
+    all_coords = []
+    for x in range(settings.WINDOW_WIDTH / settings.CELL_SIZE):
+        for y in range(settings.WINDOW_HEIGHT / settings.CELL_SIZE):
+            all_coords.append(Coordinates(x, y))
+    return all_coords
+
+
+def get_random_coord(exception_list=None):
+    eligible_coords = get_all_coords()
+    if exception_list is not None:
+        for exception_coord in exception_list:
+            eligible_coords.remove(exception_coord)
+    return random.choice(eligible_coords)
 
 
 class Coordinates(object):
