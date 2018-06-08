@@ -13,7 +13,7 @@ class GraphicalView(object):
         self._model = model
         self._is_initialized = False
         self._screen = None
-        self._small_font = None
+        self._basic_font = None
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -35,6 +35,7 @@ class GraphicalView(object):
         # clear display
         self._screen.fill(settings.BG_COLOR)
         self._draw_grid()
+        self._draw_score()
         pygame.display.update()
 
     def _draw_grid(self):
@@ -50,6 +51,16 @@ class GraphicalView(object):
                              (0, horizontal_line_y),
                              (settings.WINDOW_WIDTH, horizontal_line_y))
 
+    def _draw_score(self):
+        score_surf = self._basic_font.render(
+            f'Score: {self._model.score}',
+            True,
+            constants.WHITE
+        )
+        score_rect = score_surf.get_rect()
+        score_rect.topleft = (settings.WINDOW_WIDTH - 120, 10)
+        self._screen.blit(score_surf, score_rect)
+
 
 
     def initialize(self):
@@ -59,5 +70,5 @@ class GraphicalView(object):
         pygame.display.set_caption('wormy')
         self._screen = pygame.display.set_mode((settings.WINDOW_WIDTH,
                                                settings.WINDOW_HEIGHT))
-        self._small_font = pygame.font.Font(None, 40)
+        self._basic_font = pygame.font.Font('freesansbold.ttf', 18)
         self._is_initialized = True
