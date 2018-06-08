@@ -21,3 +21,11 @@ class Coordinates(object):
         else:
             raise Exception(f'Coordinates({self._x}, {self._y}) are out of '
                             f'bounds')
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
