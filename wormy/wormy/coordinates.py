@@ -69,3 +69,6 @@ class Coordinates(object):
     @property
     def y(self):
         return self._y
+
+    def __eq__(self, other):
+        return self._x == other._x and self._y == other._y
