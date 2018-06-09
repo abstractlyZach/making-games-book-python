@@ -1,3 +1,4 @@
+import math
 import random
 
 from . import constants
@@ -35,8 +36,10 @@ def deltas_for_direction(direction):
 
 def get_all_coords():
     all_coords = []
-    for x in range(settings.WINDOW_WIDTH / settings.CELL_SIZE):
-        for y in range(settings.WINDOW_HEIGHT / settings.CELL_SIZE):
+    horizontal_cells = math.floor(settings.WINDOW_WIDTH / settings.CELL_SIZE)
+    vertical_cells = math.floor(settings.WINDOW_HEIGHT / settings.CELL_SIZE)
+    for x in range(horizontal_cells):
+        for y in range(vertical_cells):
             all_coords.append(Coordinates(x, y))
     return all_coords
 
@@ -60,9 +63,9 @@ class Coordinates(object):
 
     @property
     def is_in_bounds(self):
-        x_in_bounds = self._x >= 0 or \
+        x_in_bounds = self._x >= 0 and \
             self._x <= (settings.WINDOW_WIDTH / settings.CELL_SIZE)
-        y_in_bounds = self._y >= 0 or \
+        y_in_bounds = self._y >= 0 and \
             self._y <= (settings.WINDOW_HEIGHT / settings.CELL_SIZE)
         return x_in_bounds and y_in_bounds
 

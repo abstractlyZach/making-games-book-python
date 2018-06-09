@@ -37,6 +37,7 @@ class GraphicalView(object):
         self._screen.fill(settings.BG_COLOR)
         self._draw_grid()
         self._draw_score()
+        self._draw_apple()
         self._draw_worm()
         pygame.display.update()
 
@@ -68,13 +69,15 @@ class GraphicalView(object):
         for coord in self._model.worm_coords:
             self._draw_box_at_coord(coord, constants.GREEN)
 
-
     def _draw_box_at_coord(self, coord, color):
         top_left = coordinates.get_top_left_of_coord(coord)
         top = top_left.pixel_y
         left = top_left.pixel_x
         box_rect = (left, top, settings.CELL_SIZE, settings.CELL_SIZE)
         pygame.draw.rect(self._screen, color, box_rect)
+
+    def _draw_apple(self):
+        self._draw_box_at_coord(self._model.apple_coord, constants.RED)
 
     def initialize(self):
         """Set up the pygame graphical display and load graphical resources."""

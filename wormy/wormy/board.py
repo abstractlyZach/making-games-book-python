@@ -3,16 +3,14 @@ from . import coordinates
 
 class Board(object):
     def __init__(self):
-        self._apple_coords = set()
+        self._spawn_apple()
 
-    def spawn_apple(self, coord):
-        if coord.is_in_bounds:
-            self._apple_coords.add(coord)
-        else:
-            raise Exception('Cannot spawn apple out of bounds.')
+    def _spawn_apple(self):
+        self._apple_coord = coordinates.get_random_coord()
 
-    def despawn_apple(self, coord):
-        self._apple_coords.remove(coord)
+    def despawn_apple(self):
+        self._spawn_apple()
 
-    def is_apple_at_coord(self, coord):
-        return coord in self._apple_coords
+    @property
+    def apple_coord(self):
+        return self._apple_coord
