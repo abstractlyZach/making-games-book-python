@@ -28,7 +28,7 @@ class Model(object):
         if isinstance(event, events.QuitEvent):
             self._running = False
         elif isinstance(event, events.TickEvent):
-            pass
+            self._worm.move()
         elif isinstance(event, events.InitializeEvent):
             head_coordinates = coordinates.Coordinates(5, 5)
             self._worm = worm.Worm(head_coordinates)

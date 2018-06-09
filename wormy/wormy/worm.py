@@ -27,11 +27,10 @@ class Worm(object):
     def body_coords(self):
         return self._body
 
-    def move(self, direction):
+    def move(self):
         if self._crashed:
             raise Exception('Worm is crashed. Cannot make move.')
-        self._direction = direction
-        self._move_head(direction)
+        self._move_head(self._direction)
         self._phantom_tail = self._body.pop(-1)
         self._check_for_self_collision()
 
