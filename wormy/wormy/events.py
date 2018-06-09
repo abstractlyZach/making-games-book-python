@@ -56,4 +56,13 @@ class ClickEvent(InputEvent):
         return '{}: {}'.format(self._name, self._position)
 
 
+class DirectionChangeEvent(Event):
+    def __init__(self, direction):
+        self._direction = direction
+        self._name = f'Direction Change Event: {direction}'
+
+    @property
+    def direction(self):
+        return self._direction
+
 

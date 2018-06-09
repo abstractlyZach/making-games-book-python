@@ -29,6 +29,8 @@ class Model(object):
             self._running = False
         elif isinstance(event, events.TickEvent):
             self._worm.move()
+        elif isinstance(event, events.DirectionChangeEvent):
+            self._worm.change_direction(event.direction)
         elif isinstance(event, events.InitializeEvent):
             head_coordinates = coordinates.Coordinates(5, 5)
             self._worm = worm.Worm(head_coordinates)

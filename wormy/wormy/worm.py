@@ -27,6 +27,12 @@ class Worm(object):
     def body_coords(self):
         return self._body
 
+    def change_direction(self, direction):
+        if direction in constants.DIRECTIONS:
+            self._direction = direction
+        else:
+            raise Exception(f'Not a valid direction: {direction}')
+
     def move(self):
         if self._crashed:
             raise Exception('Worm is crashed. Cannot make move.')
