@@ -33,7 +33,7 @@ class Model(object):
         if isinstance(event, events.QuitEvent):
             self._running = False
         elif isinstance(event, events.TickEvent):
-            self._worm.move()
+            self._handle_tick()
         elif isinstance(event, events.DirectionChangeEvent):
             self._worm.change_direction(event.direction)
         elif isinstance(event, events.InitializeEvent):
@@ -50,4 +50,14 @@ class Model(object):
             tick = events.TickEvent()
             self._main_event_manager.post(tick)
             self._clock.tick(settings.FPS)
+
+    def _handle_tick(self):
+        if not self._worm.crashed:
+            self._worm.move()
+            if self._worm.head_coord == self._board.apple_coord:
+                self._board.despawn_apple()
+                self._worm.eat_apple()
+                self._score += 1
+        else:
+            raise Exception('woops crashed.')
 
