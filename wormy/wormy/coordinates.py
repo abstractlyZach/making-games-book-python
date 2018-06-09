@@ -4,6 +4,10 @@ from . import constants
 from . import settings
 
 
+def get_top_left_of_coord(coord):
+    return PixelCoordinates(coord.x * settings.CELL_SIZE,
+                            coord.y * settings.CELL_SIZE)
+
 def coord_in_direction(original_coord, direction):
     x_delta, y_delta = deltas_for_direction(direction)
     new_coord = Coordinates(
@@ -72,3 +76,17 @@ class Coordinates(object):
 
     def __eq__(self, other):
         return self._x == other._x and self._y == other._y
+
+
+class PixelCoordinates(object):
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+
+    @property
+    def pixel_x(self):
+        return self._x
+
+    @property
+    def pixel_y(self):
+        return self._y

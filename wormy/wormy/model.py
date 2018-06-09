@@ -1,7 +1,9 @@
 import pygame
 
+from . import coordinates
 from . import events
 from . import settings
+from . import worm
 
 
 class Model(object):
@@ -18,9 +20,18 @@ class Model(object):
     def score(self):
         return self._score
 
+    @property
+    def worm_coords(self):
+        return self._worm.body_coords
+
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
+        elif isinstance(event, events.TickEvent):
+            pass
+        elif isinstance(event, events.InitializeEvent):
+            head_coordinates = coordinates.Coordinates(5, 5)
+            self._worm = worm.Worm(head_coordinates)
 
     def run(self):
         """Starts the game loop. Pumps a tick into the event manager for
