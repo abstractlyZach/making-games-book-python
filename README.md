@@ -8,3 +8,4 @@ Find it for free online here: https://inventwithpython.com/pygame/
 
 ![memory game picture](memory_puzzle/memory_game.png)
 ![slide_puzzle_picture](slide_puzzle/slide_puzzle.png)
+![simon_picture](simon/simon.png)
