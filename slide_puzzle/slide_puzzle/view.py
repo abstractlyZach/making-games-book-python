@@ -38,7 +38,7 @@ class GraphicalView(object):
         self._is_initialized = True
         self._BASIC_FONT = pygame.font.Font('freesansbold.ttf',
                                       settings.BASIC_FONT_SIZE)
-        self._board_view = photo_boardview.PhotoBoardView(
+        self._board_view = boardview.BoardView(
             self._display_surface,
             self._model,
             self._BASIC_FONT
