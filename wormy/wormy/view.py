@@ -53,7 +53,6 @@ class GraphicalView(object):
         self._draw_worm()
         self._draw_score()
 
-
     def _draw_game_over(self):
         top = 10
         game_over_font = pygame.font.Font('freesansbold.ttf', 150)
@@ -66,7 +65,7 @@ class GraphicalView(object):
                             top + game_rect.height + 25)
         self._screen.blit(game_surface, game_rect)
         self._screen.blit(over_surface, over_rect)
-
+        self._draw_press_key_message()
 
     def _draw_grid(self):
         for vertical_line_x in range(0, settings.WINDOW_WIDTH,
@@ -90,7 +89,6 @@ class GraphicalView(object):
         score_rect = score_surf.get_rect()
         score_rect.topleft = (settings.WINDOW_WIDTH - 120, 10)
         self._screen.blit(score_surf, score_rect)
-
 
     def _draw_worm(self):
         for coord in self._model.worm_coords:
@@ -121,3 +119,14 @@ class GraphicalView(object):
         """Draws the starting title screen.
         """
         self._start_screen.draw()
+        self._draw_press_key_message()
+
+    def _draw_press_key_message(self):
+        """Draws the message instructing the user to press a key.
+        """
+        press_key_surface = self._basic_font.render('Press a key to play.',
+                                                    True, constants.DARK_GRAY)
+        press_key_rect = press_key_surface.get_rect()
+        press_key_rect.topleft = (settings.WINDOW_WIDTH - 200,
+                                  settings.WINDOW_HEIGHT - 30)
+        self._screen.blit(press_key_surface, press_key_rect)
