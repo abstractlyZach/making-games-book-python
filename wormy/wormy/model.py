@@ -44,6 +44,12 @@ class Model(object):
     def _handle_event_during_start_screen(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
+        elif isinstance(event, events.KeyPressEvent):
+            self._game_state = game_states.GameState.play_mode
+            self._main_event_manager.post(events.NewGameEvent())
+        elif isinstance(event, events.DirectionChangeEvent):
+            self._game_state = game_states.GameState.play_mode
+            self._main_event_manager.post(events.NewGameEvent())
 
     def _handle_event_during_gameplay(self, event):
         if isinstance(event, events.QuitEvent):
@@ -52,7 +58,7 @@ class Model(object):
             self._handle_tick()
         elif isinstance(event, events.DirectionChangeEvent):
             self._worm.change_direction(event.direction)
-        elif isinstance(event, events.InitializeEvent):
+        elif isinstance(event, events.NewGameEvent):
             head_coordinates = coordinates.Coordinates(5, 5)
             self._worm = worm.Worm(head_coordinates)
             self._board = board.Board()

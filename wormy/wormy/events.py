@@ -65,4 +65,7 @@ class DirectionChangeEvent(Event):
     def direction(self):
         return self._direction
 
+class NewGameEvent(Event):
+    def __init__(self):
+        self._name = 'New Game Event'
 

@@ -43,5 +43,9 @@ class Controller(object):
             self._input_event_manager.post(
                 events.DirectionChangeEvent(constants.LEFT)
             )
+        else:
+            self._input_event_manager.post(
+                events.KeyPressEvent(key)
+            )
 
 
