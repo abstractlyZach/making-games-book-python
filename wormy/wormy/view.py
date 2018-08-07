@@ -42,9 +42,9 @@ class GraphicalView(object):
             # clear display
             self._screen.fill(settings.BG_COLOR)
             self._draw_grid()
-            self._draw_score()
             self._draw_apple()
             self._draw_worm()
+            self._draw_score()
         pygame.display.update()
 
     def _draw_grid(self):
