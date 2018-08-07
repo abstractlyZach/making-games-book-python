@@ -4,6 +4,8 @@ import pygame
 from . import constants
 from . import coordinates
 from . import events
+from . import game_states
+from . import start_screen
 from . import settings
 
 
@@ -15,6 +17,7 @@ class GraphicalView(object):
         self._is_initialized = False
         self._screen = None
         self._basic_font = None
+        self._start_screen = None
 
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
@@ -33,12 +36,15 @@ class GraphicalView(object):
     def render_all(self):
         if not self._is_initialized:
             return
-        # clear display
-        self._screen.fill(settings.BG_COLOR)
-        self._draw_grid()
-        self._draw_score()
-        self._draw_apple()
-        self._draw_worm()
+        if self._model.game_state is game_states.GameState.start_screen:
+            self._draw_start_screen()
+        else:
+            # clear display
+            self._screen.fill(settings.BG_COLOR)
+            self._draw_grid()
+            self._draw_score()
+            self._draw_apple()
+            self._draw_worm()
         pygame.display.update()
 
     def _draw_grid(self):
@@ -88,3 +94,9 @@ class GraphicalView(object):
                                                settings.WINDOW_HEIGHT))
         self._basic_font = pygame.font.Font('freesansbold.ttf', 18)
         self._is_initialized = True
+        self._start_screen = start_screen.StartScreen(self._screen)
+
+    def _draw_start_screen(self):
+        """Draws the starting title screen.
+        """
+        self._start_screen.draw()

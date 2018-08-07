@@ -3,6 +3,7 @@ import pygame
 from . import board
 from . import coordinates
 from . import events
+from . import game_states
 from . import settings
 from . import worm
 
@@ -16,6 +17,11 @@ class Model(object):
         self._running = False
         self._clock = pygame.time.Clock()
         self._score = 0
+        self._game_state = game_states.GameState('start_screen')
+
+    @property
+    def game_state(self):
+        return self._game_state
 
     @property
     def score(self):
@@ -30,6 +36,16 @@ class Model(object):
         return self._board.apple_coord
 
     def notify(self, event):
+        if self._game_state is game_states.GameState.start_screen:
+            self._handle_event_during_start_screen(event)
+        else:
+            self._handle_event_during_gameplay(event)
+
+    def _handle_event_during_start_screen(self, event):
+        if isinstance(event, events.QuitEvent):
+            self._running = False
+
+    def _handle_event_during_gameplay(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
         elif isinstance(event, events.TickEvent):
