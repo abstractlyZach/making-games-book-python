@@ -1,6 +1,13 @@
 from . import constants
 from . import coordinates
 
+OPPOSITE_DIRECTIONS = {
+    constants.LEFT: constants.RIGHT,
+    constants.RIGHT: constants.LEFT,
+    constants.DOWN: constants.UP,
+    constants.UP: constants.DOWN,
+}
+
 
 class Worm(object):
     def __init__(self, head_coord):
@@ -29,7 +36,9 @@ class Worm(object):
 
     def change_direction(self, direction):
         if direction in constants.DIRECTIONS:
-            self._direction = direction
+            # only 90 turns are allowed
+            if self._direction != OPPOSITE_DIRECTIONS[direction]:
+                self._direction = direction
         else:
             raise Exception(f'Not a valid direction: {direction}')
 
