@@ -37,11 +37,13 @@ class Model(object):
 
     def notify(self, event):
         if self._game_state is game_states.GameState.start_screen:
-            self._handle_event_during_start_screen(event)
+            self._handle_event_during_start_or_game_over(event)
+        elif self._game_state is game_states.GameState.game_over:
+            self._handle_event_during_start_or_game_over(event)
         else:
             self._handle_event_during_gameplay(event)
 
-    def _handle_event_during_start_screen(self, event):
+    def _handle_event_during_start_or_game_over(self, event):
         if isinstance(event, events.QuitEvent):
             self._running = False
         elif isinstance(event, events.KeyPressEvent):
@@ -81,5 +83,5 @@ class Model(object):
                 self._worm.eat_apple()
                 self._score += 1
         else:
-            raise Exception('woops crashed.')
+            self._game_state = game_states.GameState.game_over
 
