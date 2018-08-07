@@ -64,9 +64,9 @@ class Coordinates(object):
     @property
     def is_in_bounds(self):
         x_in_bounds = self._x >= 0 and \
-            self._x <= (settings.WINDOW_WIDTH / settings.CELL_SIZE)
+            self._x < (settings.WINDOW_WIDTH / settings.CELL_SIZE)
         y_in_bounds = self._y >= 0 and \
-            self._y <= (settings.WINDOW_HEIGHT / settings.CELL_SIZE)
+            self._y < (settings.WINDOW_HEIGHT / settings.CELL_SIZE)
         return x_in_bounds and y_in_bounds
 
     @property
