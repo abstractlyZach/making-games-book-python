@@ -38,14 +38,35 @@ class GraphicalView(object):
             return
         if self._model.game_state is game_states.GameState.start_screen:
             self._draw_start_screen()
+        elif self._model.game_state is game_states.GameState.game_over:
+            self._draw_gameplay_screen()
+            self._draw_game_over()
         else:
-            # clear display
-            self._screen.fill(settings.BG_COLOR)
-            self._draw_grid()
-            self._draw_apple()
-            self._draw_worm()
-            self._draw_score()
+            self._draw_gameplay_screen()
         pygame.display.update()
+
+    def _draw_gameplay_screen(self):
+        # clear display
+        self._screen.fill(settings.BG_COLOR)
+        self._draw_grid()
+        self._draw_apple()
+        self._draw_worm()
+        self._draw_score()
+
+
+    def _draw_game_over(self):
+        top = 10
+        game_over_font = pygame.font.Font('freesansbold.ttf', 150)
+        game_surface = game_over_font.render('Game', True, constants.WHITE)
+        over_surface = game_over_font.render('Over', True, constants.WHITE)
+        game_rect = game_surface.get_rect()
+        over_rect = over_surface.get_rect()
+        game_rect.midtop = (settings.WINDOW_WIDTH / 2, top)
+        over_rect.midtop = (settings.WINDOW_WIDTH / 2,
+                            top + game_rect.height + 25)
+        self._screen.blit(game_surface, game_rect)
+        self._screen.blit(over_surface, over_rect)
+
 
     def _draw_grid(self):
         for vertical_line_x in range(0, settings.WINDOW_WIDTH,
