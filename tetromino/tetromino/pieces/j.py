@@ -26,4 +26,5 @@ class JPiece(Piece):
     ]
 
     def __init__(self):
+        super().__init__()
         self._piece_type= 'J'
