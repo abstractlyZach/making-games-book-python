@@ -9,6 +9,8 @@ from . import t
 from . import z
 
 
+BLANK = '.'
+
 TEMPLATE_WIDTH = 5
 TEMPLATE_HEIGHT = 5
 

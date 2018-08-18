@@ -1,5 +1,3 @@
-BLANK = '.'
-
 # colors
 #               R    G    B
 WHITE       = (255, 255, 255)
